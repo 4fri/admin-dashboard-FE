@@ -1,6 +1,6 @@
 <template>
   <b-row>
-    <b-col xl="3" lg="4">
+    <b-col xl="12" lg="12">
       <b-card>
         <b-card-header class="d-flex justify-content-between">
           <div class="header-title">
@@ -34,38 +34,50 @@
                 </div>
               </div>
             </div>
-            <div class="form-group">
-              <label class="form-label">User Role:</label>
-              <select name="type" class="selectpicker form-control" data-style="py-0">
-                <option>Select</option>
-                <option>Web Designer</option>
-                <option>Web Developer</option>
-                <option>Tester</option>
-                <option>Php Developer</option>
-                <option>Ios Developer</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="furl">Facebook Url:</label>
-              <input type="text" class="form-control" id="furl" placeholder="Facebook Url" />
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="turl">Twitter Url:</label>
-              <input type="text" class="form-control" id="turl" placeholder="Twitter Url" />
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="instaurl">Instagram Url:</label>
-              <input type="text" class="form-control" id="instaurl" placeholder="Instagram Url" />
-            </div>
-            <div class="form-group mb-0">
-              <label class="form-label" for="lurl">Linkedin Url:</label>
-              <input type="text" class="form-control" id="lurl" placeholder="Linkedin Url" />
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label" for="name">Name</label>
+                  <input type="text" class="form-control" id="name" placeholder="Name" />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label" for="username">Username</label>
+                  <input type="text" class="form-control" id="username" placeholder="Username" />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label" for="email">Email</label>
+                  <input type="email" class="form-control" id="email" placeholder="Email" />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label" for="password">Password</label>
+                  <input type="password" class="form-control" id="password" placeholder="Password" />
+                </div>
+              </div>
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label class="form-label">User Role:</label>
+                  <select name="type" class="selectpicker form-control" data-style="py-0">
+                    <option>Select</option>
+                    <option>Web Designer</option>
+                    <option>Web Developer</option>
+                    <option>Tester</option>
+                    <option>Php Developer</option>
+                    <option>Ios Developer</option>
+                  </select>
+                </div>
+              </div>
             </div>
           </form>
         </b-card-body>
       </b-card>
     </b-col>
-    <div class="col-xl-9 col-lg-8">
+    <!-- <div class="col-xl-9 col-lg-8">
       <b-card>
         <b-card-header class="d-flex justify-content-between">
           <div class="header-title">
@@ -152,6 +164,6 @@
           </div>
         </b-card-body>
       </b-card>
-    </div>
+    </div> -->
   </b-row>
 </template>

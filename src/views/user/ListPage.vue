@@ -6,6 +6,9 @@
           <div class="header-title">
             <h4 class="card-title">User List</h4>
           </div>
+          <div class="header-title">
+            <a href="#" class="btn btn-primary" title="User Add" @click.prevent="navigateToRoute('default.user-add')">User Add</a>
+          </div>
         </div>
         <div class="card-body px-0">
           <div class="table-responsive">
@@ -143,6 +146,11 @@ export default {
     ]
     return {
       tableData
+    }
+  },
+  methods: {
+    navigateToRoute(routeName) {
+      this.$router.push({ name: routeName });
     }
   }
 }

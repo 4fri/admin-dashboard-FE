@@ -18,41 +18,6 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="mb-2 navbar-nav ms-auto align-items-center navbar-list mb-lg-0">
-          <li class="me-0 me-xl-2" v-if="isGoPro">
-            <a class="btn btn-primary btn-sm d-flex gap-2 align-items-center" aria-current="page" href="http://hopeui.iqonic.design/pro?utm_source=hopeui-free-demo&utm_medium=hopeui-free-demo&utm_campaign=hopeui-pro-launch" target="_blank">
-              <icon-component type="outlined" :size="16" icon-name="location-arrow"></icon-component>
-              Go Pro
-            </a>
-          </li>
-          <li class="nav-item dropdown">
-            <a href="#" class="search-toggle nav-link" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <img src="@/assets/images/Flag/flag001.png" class="img-fluid rounded-circle" alt="user" style="height: 30px; min-width: 30px; width: 30px" />
-              <span class="bg-primary"></span>
-            </a>
-            <div class="p-0 sub-drop dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton2">
-              <b-card no-body class="m-0 border-0 shadow-none">
-                <div class="p-0">
-                  <ul class="list-group list-group-flush p-0">
-                    <li class="iq-sub-card list-group-item">
-                      <a class="p-0" href="#"><img src="@/assets/images/Flag/flag-03.png" alt="img-flaf" class="img-fluid me-2" style="width: 15px; height: 15px; min-width: 15px" />Spanish</a>
-                    </li>
-                    <li class="iq-sub-card list-group-item">
-                      <a class="p-0" href="#"><img src="@/assets/images/Flag/flag-04.png" alt="img-flaf" class="img-fluid me-2" style="width: 15px; height: 15px; min-width: 15px" />Italian</a>
-                    </li>
-                    <li class="iq-sub-card list-group-item">
-                      <a class="p-0" href="#"><img src="@/assets/images/Flag/flag-02.png" alt="img-flaf" class="img-fluid me-2" style="width: 15px; height: 15px; min-width: 15px" />French</a>
-                    </li>
-                    <li class="iq-sub-card list-group-item">
-                      <a class="p-0" href="#"><img src="@/assets/images/Flag/flag-05.png" alt="img-flaf" class="img-fluid me-2" style="width: 15px; height: 15px; min-width: 15px" />German</a>
-                    </li>
-                    <li class="iq-sub-card list-group-item">
-                      <a class="p-0" href="#"><img src="@/assets/images/Flag/flag-06.png" alt="img-flaf" class="img-fluid me-2" style="width: 15px; height: 15px; min-width: 15px" />Japanese</a>
-                    </li>
-                  </ul>
-                </div>
-              </b-card>
-            </div>
-          </li>
           <li class="nav-item dropdown">
             <a href="#" class="nav-link" id="notification-drop" data-bs-toggle="dropdown">
               <icon-component type="dual-tone" icon-name="bell"></icon-component>
@@ -201,8 +166,8 @@
               <img src="@/assets/images/avatars/avtar_5.png" alt="User-Profile" class="theme-color-yellow-img img-fluid avatar avatar-50 avatar-rounded" />
               <img src="@/assets/images/avatars/avtar_3.png" alt="User-Profile" class="theme-color-pink-img img-fluid avatar avatar-50 avatar-rounded" />
               <div class="caption ms-3 d-none d-md-block">
-                <h6 class="mb-0 caption-title">Austin Robertson</h6>
-                <p class="mb-0 caption-sub-title">Marketing Administrator</p>
+                <h6 class="mb-0 caption-title">Ahmad Fauzi</h6>
+                <p class="mb-0 caption-sub-title">Leader NOC</p>
               </div>
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">

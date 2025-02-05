@@ -4,7 +4,7 @@ export const initialState = {
   storeKey: 'huisetting',
   setting: {
     app_name: {
-      value: 'Hope UI'
+      value: 'Dashboard Monitoring'
     },
     theme_scheme_direction: {
       value: 'ltr'
@@ -15,12 +15,12 @@ export const initialState = {
     theme_style_appearance: {
       value: ['theme-default']
     },
-     theme_color: {
+    theme_color: {
       colors: {
-        "--{{prefix}}primary": "#3a57e8",
-        "--{{prefix}}info": "#08B1BA"
+        '--{{prefix}}primary': '#00C3F9',
+        '--{{prefix}}info': '#573BFF'
       },
-      value: "theme-color-default"
+      value: 'theme-color-blue'
     },
     theme_font_size: {
       value: 'theme-fs-sm'
@@ -29,16 +29,16 @@ export const initialState = {
     //   value: 'container'
     // },
     sidebar_color: {
-      value: 'sidebar-white'
+      value: 'sidebar-dark'
     },
     sidebar_type: {
       value: []
     },
     sidebar_menu_style: {
-      value: 'sidebar-default navs-rounded-all'
+      value: 'sidebar-default navs-pill-all'
     },
     header_navbar: {
-      value: 'default'
+      value: 'navs-sticky'
     },
     header_banner: {
       value: 'default'
@@ -55,7 +55,7 @@ export const defaultState = {
       target: '[data-setting="app_name"]',
       choices: [],
       type: 'text',
-      value: 'Hope UI'
+      value: 'Dashboard Monitoring'
     },
     theme_scheme_direction: {
       target: 'html',
@@ -69,22 +69,15 @@ export const defaultState = {
       type: 'layout_design',
       value: 'light'
     },
-      theme_color: {
-      target: "body",
-      choices: [
-        "theme-color-blue",
-        "theme-color-gray",
-        "theme-color-red",
-        "theme-color-yellow",
-        "theme-color-pink",
-        "theme-color-default",
-      ],
-      type: "default",
+    theme_color: {
+      target: 'body',
+      choices: ['theme-color-blue', 'theme-color-gray', 'theme-color-red', 'theme-color-yellow', 'theme-color-pink', 'theme-color-default'],
+      type: 'default',
       colors: {
-        "--{{prefix}}primary": "#3a57e8",
-        "--{{prefix}}info": "#08B1BA",
+        '--{{prefix}}primary': '#00C3F9',
+        '--{{prefix}}info': '#573BFF'
       },
-      value: "theme-color-default",
+      value: 'theme-color-blue'
     },
     theme_font_size: {
       target: 'html',
@@ -102,7 +95,7 @@ export const defaultState = {
       target: '[data-toggle="main-sidebar"]',
       choices: ['sidebar-white', 'sidebar-dark', 'sidebar-color'],
       type: 'layout_design',
-      value: 'sidebar-white'
+      value: 'sidebar-dark'
     },
     sidebar_type: {
       target: '[data-toggle="main-sidebar"]',
@@ -114,13 +107,13 @@ export const defaultState = {
       target: '[data-toggle="main-sidebar"]',
       choices: ['sidebar-default navs-rounded', 'sidebar-default navs-rounded-all', 'sidebar-default navs-pill', 'sidebar-default navs-pill-all'],
       type: 'layout_design',
-      value: 'sidebar-default navs-rounded-all'
+      value: 'sidebar-default navs-pill-all'
     },
     header_navbar: {
       target: '.iq-navbar',
       choices: ['default', 'fixed', 'navs-sticky', 'nav-glass', 'navs-transparent', 'boxed', 'hidden'],
       type: 'layout_design',
-      value: 'default'
+      value: 'navs-sticky'
     },
     header_banner: {
       target: '.iq-banner',
