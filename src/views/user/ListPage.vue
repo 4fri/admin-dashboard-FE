@@ -33,9 +33,9 @@
   </b-row>
 </template>
 <script>
-import axios from 'axios';
 import { ref, onMounted } from 'vue';
 import TableWidget from '@/components/widgets/users/TableWidgetUsers.vue';
+import api from '@/plugins/axios';
 
 export default {
   components: {
@@ -43,10 +43,10 @@ export default {
   },
   setup() {
     const tableData = ref([]);
-    const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNzM5MTEzNTUzLCJleHAiOjE3MzkxMTcxNTMsIm5iZiI6MTczOTExMzU1MywianRpIjoiNUJ6TVVNcUZaM0N4c1F4cSIsInN1YiI6IjllMjZjNjllLTVlNTQtNGMxZS1iMzBiLTZmOWZiMjBjYzZiMyIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.HWpPuBI-KVVCbEbe30wEsHWlyn-8bbRLSY0jo4rEjQk';
+    const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNzM5MjM5MDcyLCJleHAiOjE3MzkyNDI2NzIsIm5iZiI6MTczOTIzOTA3MiwianRpIjoiT0RIdlJzbDZka2g0ZUROSiIsInN1YiI6IjllMmVjOTU1LTE2MWItNGY5Yy1iMDVjLTQxNGIwNDQ4N2FhNyIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.2mDyTXBPUpopO_8UFn9NFzNe8rvlZdpihoBMb54IP7U';
     const fetchData = async () => {
       try {
-        const response = await axios.get('/api/users', {
+        const response = await api.get('/users', {
           headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
@@ -54,7 +54,7 @@ export default {
         });
         tableData.value = response.data.result.map(user => ({
           id: user.id,
-          name: user.name,
+          name: user.fullname,
           email: user.email,
           roles: user.roles.join(', ')
         }));
