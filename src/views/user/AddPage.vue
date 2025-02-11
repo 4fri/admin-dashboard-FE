@@ -17,12 +17,39 @@
                   <input v-model="form.name" type="text" class="form-control" id="name" placeholder="Name" required />
                 </div>
               </div>
+              <!-- Fullname -->
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label" for="username">Username</label>
+                  <input v-model="form.username" type="text" class="form-control" id="username" placeholder="Username" required />
+                </div>
+              </div>
 
               <!-- Email -->
               <div class="col-md-6">
                 <div class="form-group">
                   <label class="form-label" for="email">Email</label>
                   <input v-model="form.email" type="email" class="form-control" id="email" placeholder="Email" required />
+                </div>
+              </div>
+
+                            <!-- User Role (vue-multiselect with axios) -->
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label">User Role</label>
+                  <multiselect 
+                    v-model="form.roles" 
+                    :options="roles" 
+                    :multiple="true" 
+                    :close-on-select="false" 
+                    :clear-on-select="false" 
+                    :preserve-search="true"
+                    placeholder="Select roles"
+                    label="name"
+                    track-by="id"
+                    class="form-control"
+                  />
+                  <small v-if="loadingRoles" class="text-muted">Loading roles...</small>
                 </div>
               </div>
 
@@ -43,25 +70,7 @@
                 </div>
               </div>
 
-              <!-- User Role (vue-multiselect with axios) -->
-              <div class="col-md-12">
-                <div class="form-group">
-                  <label class="form-label">User Role</label>
-                  <multiselect 
-                    v-model="form.roles" 
-                    :options="roles" 
-                    :multiple="true" 
-                    :close-on-select="false" 
-                    :clear-on-select="false" 
-                    :preserve-search="true"
-                    placeholder="Select roles"
-                    label="name"
-                    track-by="id"
-                    class="form-control"
-                  />
-                  <small v-if="loadingRoles" class="text-muted">Loading roles...</small>
-                </div>
-              </div>
+
             </div>
 
             <!-- Submit Button -->
@@ -86,6 +95,7 @@ export default {
     return {
       form: {
         name: "",
+        username: "",
         email: "",
         password: "",
         password_confirmation: "",
@@ -138,6 +148,7 @@ export default {
       try {
         const response = await api.post('/users/store', {
           fullname: this.form.name,
+          username: this.form.username,
           email: this.form.email,
           password: this.form.password,
           password_confirmation: this.form.password_confirmation,
