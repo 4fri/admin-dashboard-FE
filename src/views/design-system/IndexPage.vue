@@ -13,9 +13,9 @@
               <div class="card-body text-center d-flex flex-column">
                 <h4 class="card-title"><b>ITAM Dashboard</b></h4>
                 <p class="card-text mb-2 text-dark text-muted">Monitoring for Asset Management System</p>
-                <a href="#" class="btn btn-primary btn-sm w-100 mt-3">
+                <router-link to="/dashboard" class="btn btn-primary btn-sm w-100 mt-3">
                   Go
-                </a>
+                </router-link>
               </div>
             </div>
           </div>

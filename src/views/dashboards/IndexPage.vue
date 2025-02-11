@@ -23,18 +23,16 @@
               prevEl: '#blog-tranding-prev'
             }">
             <SwiperSlide class="swiper-slide card card-slide" v-for="(item, index) in swiperItems" :key="index">
-              <b-card-body>
-                <div class="progress-widget">
-                  <analytics-widget :index="index" :title="item.title" :size="item.size" :sub-title="item.subTitle" :value="item.value" :color="item.color" :is-profit="item.isProfit">
-                    <svg class="card-slie-arrow" width="24" height="24px" viewBox="0 0 24 24" v-if="index % 2">
-                      <path fill="currentColor" d="M19,6.41L17.59,5L7,15.59V9H5V19H15V17H8.41L19,6.41Z"></path>
+              <b-card-body class="bg-soft-primary shadow border-dark rounded">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="bg-soft-primary rounded p-3">
+                    <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M11.997 15.1746C7.684 15.1746 4 15.8546 4 18.5746C4 21.2956 7.661 21.9996 11.997 21.9996C16.31 21.9996 19.994 21.3206 19.994 18.5996C19.994 15.8786 16.334 15.1746 11.997 15.1746Z" fill="currentColor"></path>
+                      <path opacity="0.4" d="M11.9971 12.5838C14.9351 12.5838 17.2891 10.2288 17.2891 7.29176C17.2891 4.35476 14.9351 1.99976 11.9971 1.99976C9.06008 1.99976 6.70508 4.35476 6.70508 7.29176C6.70508 10.2288 9.06008 12.5838 11.9971 12.5838Z" fill="currentColor"></path>
                     </svg>
-                    <svg class="card-slie-arrow" width="24" height="24" viewBox="0 0 24 24" v-else>
-                      <path fill="currentColor" d="M5,17.59L15.59,7H9V5H19V15H17V8.41L6.41,19L5,17.59Z"></path>
-                    </svg>
-                  </analytics-widget>
-                  <div class="progress-detail">
-                    <p class="mb-2">{{ item.subTitle }}</p>
+                  </div>
+                  <div class="text-end">
+                    <p class="mb-2 text-dark">{{ item.subTitle }}</p>
                     <h4 class="counter">{{ item.amount }}</h4>
                   </div>
                 </div>
@@ -56,7 +54,7 @@
 import { onMounted, ref } from 'vue'
 import { Navigation } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/vue'
-import AnalyticsWidget from '@/components/widgets/AnalyticsWidget.vue'
+// import AnalyticsWidget from '@/components/widgets/AnalyticsWidget.vue'
 import AOS from 'aos'
 import TableComponent from '@/views/Components/TableComponent.vue'
 
@@ -64,7 +62,7 @@ export default {
   components: {
     Swiper,
     SwiperSlide,
-    AnalyticsWidget,
+    // AnalyticsWidget,
     TableComponent
   },
   setup() {
@@ -254,44 +252,26 @@ export default {
       {
         size: 90,
         amount: '560K',
-        subTitle: 'Total Sales',
+        subTitle: 'Customer',
         color: 'primary'
       },
       {
         size: 80,
         amount: '185K',
-        subTitle: 'Total Profit',
+        subTitle: 'Contract Vendor',
         color: 'info'
       },
       {
         size: 70,
         amount: '375K',
-        subTitle: 'Total Cost',
+        subTitle: 'Licenses',
         color: 'primary'
       },
       {
         size: 60,
         amount: '742K',
-        subTitle: 'Revenue',
+        subTitle: 'Assets',
         color: 'info'
-      },
-      {
-        size: 50,
-        amount: '150K',
-        subTitle: 'Net Income',
-        color: 'primary'
-      },
-      {
-        size: 40,
-        amount: '4600',
-        subTitle: 'Today',
-        color: 'info'
-      },
-      {
-        size: 30,
-        amount: '11.2M',
-        subTitle: 'Members',
-        color: 'primary'
       }
     ])
     onMounted(() => {

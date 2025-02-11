@@ -3,7 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 // Design System Routes
 const designSystemChildRoutes = (prefix) => [
   {
-    path: '',
+    path: '/landingPage',
     name: prefix + '.main',
     meta: { auth: true, name: 'Design System' },
     component: () => import('@/views/design-system/IndexPage.vue')
@@ -14,7 +14,7 @@ const authChildRoutes = (prefix) => [
   {
     path: 'login',
     name: prefix + '.login',
-    meta: { auth: false, name: 'Login' },
+    meta: { auth: true, name: 'Login' },
     component: () => import('@/views/auth/default/SignIn.vue')
   },
   {
@@ -380,6 +380,18 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   base: process.env.BASE_URL,
   routes
+})
+
+// Middleware navigasi
+router.beforeEach((to, from, next) => {
+  const isAuthenticated = localStorage.getItem('access_token') !== null
+
+  if (to.meta.auth && !isAuthenticated) {
+    // Jika rute memerlukan otentikasi dan tidak ada token, tetap di halaman login
+    next({ name: 'auth.login' }) // Ganti dengan nama rute login Anda
+  } else {
+    next() // Lanjutkan ke rute yang diminta
+  }
 })
 
 export default router
