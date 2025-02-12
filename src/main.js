@@ -18,6 +18,7 @@ import globalMixin from './plugins/global-mixin'
 import api from "./plugins/axios"; // Pastikan ini diimpor
 import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
+import Swal from 'sweetalert2';
 
 const options = {
     timeout: 3000, // Durasi toast
@@ -29,7 +30,6 @@ require('waypoints/lib/noframework.waypoints.min')
 const app = createApp(App)
 app.use(store).use(router)
 app.use(Toast, options);
-
 // Library Components
 app.use(VueSweetalert2)
 app.use(VueApexCharts)
@@ -42,6 +42,7 @@ app.use(globalDirective)
 app.mixin(globalMixin)
 
 // Gunakan API sebagai global instance
+app.config.globalProperties.$swal = Swal;
 app.config.globalProperties.$api = api;
 
 app.mount('#app')

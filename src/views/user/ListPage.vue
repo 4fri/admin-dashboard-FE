@@ -10,24 +10,13 @@
             <a href="#" class="btn btn-primary" title="User Add" @click.prevent="navigateToRoute('default.user-add')">User Add</a>
           </div>
         </div>
-        <div class="card-body px-0">
-          <div class="table-responsive">
-            <table id="user-list-table" class="table table-striped" role="grid" data-toggle="data-table">
-              <thead>
-                <tr class="ligth">
-                  <th>No</th>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Roles</th>
-                  <th style="min-width: 100px">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                <table-widget :list="tableData" />
-              </tbody>
-            </table>
-          </div>
-        </div>
+        <TableWidget 
+         :rows="tableData" 
+         :columns="columns"
+         :buttonEdit="{ visible: true, disable: false }"
+          :buttonDelete="{ visible: true, disable: false }"
+          @delete="deleteRow"
+         />
       </div>
     </b-col>
   </b-row>
@@ -41,9 +30,29 @@ export default {
   components: {
     TableWidget
   },
+  data() {
+    return {
+      columns: [
+        {
+          key: 'fullname',
+          label: 'Name'
+        },
+        {
+          key: 'email',
+          label: 'Email'
+        },
+        {
+          key: 'roles',
+          label: 'Roles'
+        },
+      ],
+    };
+  },
+
+
   setup() {
     const tableData = ref([]);
-    const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNzM5MjM5MDcyLCJleHAiOjE3MzkyNDI2NzIsIm5iZiI6MTczOTIzOTA3MiwianRpIjoiT0RIdlJzbDZka2g0ZUROSiIsInN1YiI6IjllMmVjOTU1LTE2MWItNGY5Yy1iMDVjLTQxNGIwNDQ4N2FhNyIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.2mDyTXBPUpopO_8UFn9NFzNe8rvlZdpihoBMb54IP7U';
+    const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNzM5MzI0MjUyLCJleHAiOjE3MzkzMjc4NTIsIm5iZiI6MTczOTMyNDI1MiwianRpIjoiMnBnT0wwTU00OEVXWVp1TCIsInN1YiI6IjllMmVmODNjLTk2YmMtNDZhMi04OTk0LTM0YTVjYWZiYzc5OCIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.fMnY9IjoiVtb_EPisnPNdbWe3M6-5boNeKph7_EvsJI';
     const fetchData = async () => {
       try {
         const response = await api.get('/users', {
@@ -54,7 +63,7 @@ export default {
         });
         tableData.value = response.data.result.map(user => ({
           id: user.id,
-          name: user.fullname,
+          fullname: user.fullname,
           email: user.email,
           roles: user.roles.join(', ')
         }));
@@ -72,7 +81,35 @@ export default {
   methods: {
     navigateToRoute(routeName) {
       this.$router.push({ name: routeName });
+    },
+    deleteRow(id) {
+  this.$swal.fire({
+    title: "Are you sure?",
+    text: "You won't be able to revert this!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#3085d6",
+    confirmButtonText: "Yes, delete it!"
+  }).then((result) => {
+    if (result.isConfirmed) {
+      api
+        .delete(`/api/data/${id}`)
+        .then(() => {
+          // Hapus dari array lokal jika diperlukan
+          this.items = this.items.filter(item => item.id !== id);
+          
+          this.$swal.fire("Deleted!", "The row has been deleted.", "success");
+        })
+        .catch((error) => {
+          console.error("Error deleting row:", error);
+          this.$swal.fire("Error!", "Failed to delete the row.", "error");
+        });
     }
+  });
+}
+
+
   }
 };
 </script>

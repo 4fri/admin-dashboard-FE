@@ -161,6 +161,7 @@ export default {
         });
 
         if (response.data.success) {
+          this.$router.push('/user-list'); // Redirect ke halaman user list
           toast.success("User successfully added!"); // Tampilkan notifikasi sukses
         } else {
           // Tampilkan pesan error dari response API
