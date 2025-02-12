@@ -51,7 +51,7 @@
   </b-row>
 </template>
 <script>
-import { ref, onMounted, getCurrentInstance } from 'vue';
+import { getCurrentInstance } from 'vue';
 import TableWidget from '@/components/widgets/users/TableWidgetUsers.vue';
 import api from '@/plugins/axios';
 import { Modal } from 'bootstrap';
@@ -60,40 +60,47 @@ export default {
   components: {
     TableWidget,
   },
-  setup() {
-    const tableData = ref([]);
-    const pagination = ref({
-      current_page: 1,
-      last_page: 1,
-      prev_page_url: null,
-      next_page_url: null,
-    });
-
-    // Ambil instance Vue untuk mendapatkan globalProperties
+  data() {
+    return {
+      tableData: [],
+      pagination: {
+        current_page: 1,
+        last_page: 1,
+        prev_page_url: null,
+        next_page_url: null,
+      },
+      columns: [
+        { key: 'fullname', label: 'Name' },
+        { key: 'email', label: 'Email' },
+        { key: 'roles', label: 'Roles' },
+      ],
+      token: '',
+    };
+  },
+  created() {
     const instance = getCurrentInstance();
-    const token = instance?.appContext.config.globalProperties.$token || '';
-
-    // Fetch data dari API
-    const fetchData = async (page = 1) => {
+    this.token = instance?.appContext.config.globalProperties.$token || '';
+    this.fetchData();
+  },
+  methods: {
+    async fetchData(page = 1) {
       try {
         const response = await api.get('/users', {
           params: { page },
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${this.token}`,
           },
         });
 
-        // Update data tabel
-        tableData.value = response.data.result.data.map((user) => ({
+        this.tableData = response.data.result.data.map((user) => ({
           id: user.id,
           fullname: user.fullname,
           email: user.email,
           roles: user.roles.join(', '),
         }));
 
-        // Update pagination
-        pagination.value = {
+        this.pagination = {
           current_page: response.data.result.current_page,
           last_page: response.data.result.last_page,
           prev_page_url: response.data.result.prev_page_url,
@@ -102,18 +109,14 @@ export default {
       } catch (error) {
         console.error('Error fetching data:', error);
       }
-    };
-
-    // Fungsi untuk mengganti halaman
-    const changePage = (page) => {
-      if (page >= 1 && page <= pagination.value.last_page) {
-        fetchData(page);
+    },
+    changePage(page) {
+      if (page >= 1 && page <= this.pagination.last_page) {
+        this.fetchData(page);
       }
-    };
-
-    // Fungsi untuk menghapus baris
-    const deleteRow = (id) => {
-      instance.proxy.$swal
+    },
+    deleteRow(id) {
+      this.$swal
         .fire({
           title: 'Are you sure?',
           text: "You won't be able to revert this!",
@@ -126,49 +129,29 @@ export default {
         .then((result) => {
           if (result.isConfirmed) {
             api
-              .delete(`/api/data/${id}/destroy`, {
+              .delete(`/users/${id}/destroy`, {
                 headers: {
                   'Content-Type': 'application/json',
-                  Authorization: `Bearer ${token}`,
+                  Authorization: `Bearer ${this.token}`,
                 },
               })
               .then(() => {
-                // Hapus dari array lokal jika diperlukan
-                tableData.value = tableData.value.filter((item) => item.id !== id);
-                instance.proxy.$swal.fire('Deleted!', 'The row has been deleted.', 'success');
+                this.tableData = this.tableData.filter((item) => item.id !== id);
+                this.$toast.success("Data berhasil dihapus!");
               })
               .catch((error) => {
                 console.error('Error deleting row:', error);
-                instance.proxy.$swal.fire('Error!', 'Failed to delete the row.', 'error');
+                this.$toast.error("Data gagal dihapus!");
+
               });
           }
         });
-    };
-
-    // Fungsi untuk membuka modal
-    const openNewPermissionModal = () => {
-      const modalElement = instance.refs.newPermissionModal;
+    },
+    openNewPermissionModal() {
+      const modalElement = this.$refs.newPermissionModal;
       const modalInstance = new Modal(modalElement);
       modalInstance.show();
-    };
-
-    // Fetch data saat komponen dimount
-    onMounted(() => fetchData());
-
-    return {
-      tableData,
-      pagination,
-      columns: [
-        { key: 'fullname', label: 'Name' },
-        { key: 'email', label: 'Email' },
-        { key: 'roles', label: 'Roles' },
-      ],
-      changePage,
-      deleteRow,
-      openNewPermissionModal,
-    };
-  },
-  methods: {
+    },
     navigateToRoute(routeName) {
       this.$router.push({ name: routeName });
     },

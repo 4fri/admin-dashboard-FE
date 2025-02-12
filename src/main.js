@@ -15,23 +15,23 @@ import 'aos/dist/aos.css'
 import globalComponent from './plugins/global-components'
 import globalDirective from './plugins/global-directive'
 import globalMixin from './plugins/global-mixin'
-import api from "./plugins/axios"; // Pastikan ini diimpor
-import Toast from "vue-toastification";
+import api from "./plugins/axios";
+import Toast, { useToast } from "vue-toastification";
 import "vue-toastification/dist/index.css";
 import Swal from 'sweetalert2';
 
 const Token = localStorage.getItem('access_token') || '';
-const options = {
-    timeout: 3000, // Durasi toast
-    position: "bottom-right", // Posisi toast
-  };
-
+const toastOptions = {
+    timeout: 3000,
+    position: "bottom-right",
+};
 
 require('waypoints/lib/noframework.waypoints.min')
 
 const app = createApp(App)
 app.use(store).use(router)
-app.use(Toast, options);
+app.use(Toast, toastOptions)
+
 // Library Components
 app.use(VueSweetalert2)
 app.use(VueApexCharts)
@@ -43,12 +43,13 @@ app.use(globalComponent)
 app.use(globalDirective)
 app.mixin(globalMixin)
 
-// Gunakan API sebagai global instance
+// Gunakan API, SweetAlert, dan Toast sebagai global instance
 app.config.globalProperties.$swal = Swal;
 app.config.globalProperties.$api = api;
 app.config.globalProperties.$token = Token;
+app.config.globalProperties.$toast = useToast(); // Menjadikan toast sebagai global instance
 
 app.mount('#app')
-console.log('Global token:', app.config.globalProperties.$token); // Debugging token
+console.log('Global token:', app.config.globalProperties.$token);
 
 export default app
