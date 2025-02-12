@@ -102,7 +102,8 @@ export default {
         roles: []
       },
       roles: [],
-      loadingRoles: false
+      loadingRoles: false,
+      token: '',
     };
   },
   computed: {
@@ -110,11 +111,14 @@ export default {
       return this.form.password && this.form.password_confirmation && this.form.password !== this.form.password_confirmation;
     }
   },
+  created() {
+    this.token =  localStorage.getItem('access_token');
+  },
   methods: {
     async fetchRoles() {
       this.loadingRoles = true;
       try {
-        const response = await api.get("/roles", {
+        const response = await api.get('/roles', {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${this.$token}`

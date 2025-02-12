@@ -60,6 +60,12 @@ const defaultChildRoutes = (prefix) => [
     meta: { auth: true, name: 'Home', isBanner: true },
     component: () => import('@/views/dashboards/IndexPage.vue')
   },
+  {
+    path: '/alerting',
+    name: prefix + '.alerting',
+    meta: { auth: true, name: 'Alerting Dashboard', isBanner: true },
+    component: () => import('@/views/dashboards/AlertingDashboard.vue')
+  },
   // Spacial Pages
   {
     path: '/billing',
@@ -255,54 +261,6 @@ const landingPageRoutes = (prefix) => [
     meta: { auth: true, name: 'Landing Page', isBanner: true, header: 'header_two', footer: 'footer' },
     component: () => import('@/views/modules/landing-pages/LandingPage.vue')
   },
-  {
-    path: '/about-us',
-    name: prefix + 'about-us',
-    meta: { auth: true, name: 'About Us', isBanner: true, header: 'header_one', footer: 'footer' },
-    component: () => import('@/views/modules/landing-pages/AboutUs.vue')
-  },
-  {
-    path: '/blogs',
-    name: prefix + 'blogs',
-    meta: { auth: true, name: 'Blogs', isBanner: true, header: 'header_one', footer: 'footer' },
-    component: () => import('@/views/modules/landing-pages/BlogPage')
-  },
-  {
-    path: '/blog-details',
-    name: prefix + 'blog-details',
-    meta: { auth: true, name: 'Blogs', isBanner: true, header: 'header_one', footer: 'footer' },
-    component: () => import('@/views/modules/landing-pages/BlogDetail')
-  },
-  {
-    path: '/contact-us',
-    name: prefix + 'contact-us',
-    meta: { auth: true, name: 'Contact Us', isBanner: true, header: 'header_one', footer: 'footer' },
-    component: () => import('@/views/modules/landing-pages/ContactUs')
-  },
-  {
-    path: '/faq',
-    name: prefix + 'faq',
-    meta: { auth: true, name: 'FAQ', isBanner: true, header: 'header_one', footer: 'footer' },
-    component: () => import('@/views/modules/landing-pages/FAQ')
-  },
-  {
-    path: '/features',
-    name: prefix + 'features',
-    meta: { auth: true, name: 'Features', isBanner: true, header: 'header_one', footer: 'footer' },
-    component: () => import('@/views/modules/landing-pages/FeaturesPage.vue')
-  },
-  {
-    path: '/pricing',
-    name: prefix + 'pricing',
-    meta: { auth: true, name: 'Pricing', isBanner: true, header: 'header_one', footer: 'footer' },
-    component: () => import('@/views/modules/landing-pages/PricingPage')
-  },
-  {
-    path: '/software',
-    name: prefix + 'software',
-    meta: { auth: true, name: 'Software Landing Page', isBanner: true, header: 'header_one', footer: 'footer' },
-    component: () => import('@/views/modules/landing-pages/SoftwareLandingPage.vue')
-  }
 ]
 
 const routes = [

@@ -4,6 +4,7 @@
     <ul class="navbar-nav iq-main-menu" id="sidebar-menu">
       <side-menu title="Home" :static-item="true"></side-menu>
       <side-menu isTag="router-link" title="Dashboard" icon="view-grid" :route="{ to: 'default.dashboard' }"></side-menu>
+      <side-menu isTag="router-link" title="Alert" icon="view-grid" :route="{ to: 'default.alerting' }"></side-menu>
 
       <!-- <side-menu title="Menu Style" icon="adjustment" toggle-id="menu-style" :caret-icon="true" :route="{ popup: 'false', to: 'menu-style' }" @onClick="toggle" :active="currentRoute.includes('menu-style')">
         <b-collapse tag="ul" class="sub-nav" id="menu-style" accordion="sidebar-menu" :visible="currentRoute.includes('menu-style')">

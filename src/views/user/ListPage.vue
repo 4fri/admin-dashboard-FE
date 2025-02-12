@@ -51,7 +51,6 @@
   </b-row>
 </template>
 <script>
-import { getCurrentInstance } from 'vue';
 import TableWidget from '@/components/widgets/users/TableWidgetUsers.vue';
 import api from '@/plugins/axios';
 import { Modal } from 'bootstrap';
@@ -78,8 +77,7 @@ export default {
     };
   },
   created() {
-    const instance = getCurrentInstance();
-    this.token = instance?.appContext.config.globalProperties.$token || '';
+    this.token =  localStorage.getItem('access_token');
     this.fetchData();
   },
   methods: {
