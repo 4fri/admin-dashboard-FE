@@ -8,162 +8,178 @@
           </div>
         </b-card-header>
         <b-card-body>
-          <form>
-            <div class="form-group">
-              <div class="profile-img-edit position-relative">
-                <img src="@/assets/images/avatars/01.png" alt="profile-pic" class="theme-color-default-img profile-pic rounded avatar-100" loading="lazy" />
-                <img src="@/assets/images/avatars/avtar_1.png" alt="profile-pic" class="theme-color-purple-img profile-pic rounded avatar-100" loading="lazy" />
-                <img src="@/assets/images/avatars/avtar_2.png" alt="profile-pic" class="theme-color-blue-img profile-pic rounded avatar-100" loading="lazy" />
-                <img src="@/assets/images/avatars/avtar_4.png" alt="profile-pic" class="theme-color-green-img profile-pic rounded avatar-100" loading="lazy" />
-                <img src="@/assets/images/avatars/avtar_5.png" alt="profile-pic" class="theme-color-yellow-img profile-pic rounded avatar-100" loading="lazy" />
-                <img src="@/assets/images/avatars/avtar_3.png" alt="profile-pic" class="theme-color-pink-img profile-pic rounded avatar-100" loading="lazy" />
-                <div class="upload-icone bg-primary">
-                  <svg class="upload-button" width="14" height="14" viewBox="0 0 24 24">
-                    <path fill="#ffffff" d="M14.06,9L15,9.94L5.92,19H5V18.08L14.06,9M17.66,3C17.41,3 17.15,3.1 16.96,3.29L15.13,5.12L18.88,8.87L20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18.17,3.09 17.92,3 17.66,3M14.06,6.19L3,17.25V21H6.75L17.81,9.94L14.06,6.19Z" />
-                  </svg>
-                  <input class="file-upload" type="file" accept="image/*" />
-                </div>
-              </div>
-              <div class="img-extension mt-3">
-                <div class="d-inline-block align-items-center">
-                  <span>Only</span>
-                  <a href="javascript:void(0);">.jpg</a>
-                  <a href="javascript:void(0);">.png</a>
-                  <a href="javascript:void(0);">.jpeg</a>
-                  <span> allowed</span>
-                </div>
-              </div>
-            </div>
+          <form @submit.prevent="submitForm">
             <div class="row g-3">
+              <!-- Fullname -->
               <div class="col-md-6">
                 <div class="form-group">
-                  <label class="form-label" for="name">Name</label>
-                  <input type="text" class="form-control" id="name" placeholder="Name" />
+                  <label class="form-label" for="name">Fullname</label>
+                  <input v-model="form.name" type="text" class="form-control" id="name" placeholder="Name" required />
                 </div>
               </div>
+              <!-- Fullname -->
               <div class="col-md-6">
                 <div class="form-group">
                   <label class="form-label" for="username">Username</label>
-                  <input type="text" class="form-control" id="username" placeholder="Username" />
+                  <input v-model="form.username" type="text" class="form-control" id="username" placeholder="Username" required />
                 </div>
               </div>
+
+              <!-- Email -->
               <div class="col-md-6">
                 <div class="form-group">
                   <label class="form-label" for="email">Email</label>
-                  <input type="email" class="form-control" id="email" placeholder="Email" />
+                  <input v-model="form.email" type="email" class="form-control" id="email" placeholder="Email" required />
                 </div>
               </div>
+
+                            <!-- User Role (vue-multiselect with axios) -->
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label">User Role</label>
+                  <multiselect 
+                    v-model="form.roles" 
+                    :options="roles" 
+                    :multiple="true" 
+                    :close-on-select="false" 
+                    :clear-on-select="false" 
+                    :preserve-search="true"
+                    placeholder="Select roles"
+                    label="name"
+                    track-by="id"
+                    class="form-control"
+                  />
+                  <small v-if="loadingRoles" class="text-muted">Loading roles...</small>
+                </div>
+              </div>
+
+              <!-- Password -->
               <div class="col-md-6">
                 <div class="form-group">
                   <label class="form-label" for="password">Password</label>
-                  <input type="password" class="form-control" id="password" placeholder="Password" />
+                  <input v-model="form.password" type="password" class="form-control" id="password" placeholder="Password" required />
                 </div>
               </div>
-              <div class="col-md-12">
+
+              <!-- Repeat Password -->
+              <div class="col-md-6">
                 <div class="form-group">
-                  <label class="form-label">User Role:</label>
-                  <select name="type" class="selectpicker form-control" data-style="py-0">
-                    <option>Select</option>
-                    <option>Web Designer</option>
-                    <option>Web Developer</option>
-                    <option>Tester</option>
-                    <option>Php Developer</option>
-                    <option>Ios Developer</option>
-                  </select>
+                  <label class="form-label" for="rpass">Repeat Password</label>
+                  <input v-model="form.password_confirmation" type="password" class="form-control" id="rpass" placeholder="Repeat Password" required />
+                  <small v-if="passwordMismatch" class="text-danger">Passwords do not match</small>
                 </div>
               </div>
+
+
             </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary" :disabled="passwordMismatch">Add New User</button>
           </form>
         </b-card-body>
       </b-card>
     </b-col>
-    <!-- <div class="col-xl-9 col-lg-8">
-      <b-card>
-        <b-card-header class="d-flex justify-content-between">
-          <div class="header-title">
-            <h4 class="card-title">New User Information</h4>
-          </div>
-        </b-card-header>
-        <b-card-body>
-          <div class="new-user-info">
-            <form>
-              <b-row>
-                <b-col md="6" class="form-group">
-                  <label class="form-label" for="fname">First Name:</label>
-                  <input type="text" class="form-control" id="fname" placeholder="First Name" />
-                </b-col>
-                <b-col md="6" class="form-group">
-                  <label class="form-label" for="lname">Last Name:</label>
-                  <input type="text" class="form-control" id="lname" placeholder="Last Name" />
-                </b-col>
-                <b-col md="6" class="form-group">
-                  <label class="form-label" for="add1">Street Address 1:</label>
-                  <input type="text" class="form-control" id="add1" placeholder="Street Address 1" />
-                </b-col>
-                <b-col md="6" class="form-group">
-                  <label class="form-label" for="add2">Street Address 2:</label>
-                  <input type="text" class="form-control" id="add2" placeholder="Street Address 2" />
-                </b-col>
-                <b-col md="6" class="form-group">
-                  <label class="form-label" for="cname">Company Name:</label>
-                  <input type="text" class="form-control" id="cname" placeholder="Company Name" />
-                </b-col>
-                <b-col sm="12" class="form-group">
-                  <label class="form-label">Country:</label>
-                  <select name="type" class="selectpicker form-control" data-style="py-0">
-                    <option>Select Country</option>
-                    <option>Caneda</option>
-                    <option>Noida</option>
-                    <option>USA</option>
-                    <option>India</option>
-                    <option>Africa</option>
-                  </select>
-                </b-col>
-                <b-col md="6" class="form-group">
-                  <label class="form-label" for="mobno">Mobile Number:</label>
-                  <input type="text" class="form-control" id="mobno" placeholder="Mobile Number" />
-                </b-col>
-                <b-col md="6" class="form-group">
-                  <label class="form-label" for="altconno">Alternate Contact:</label>
-                  <input type="text" class="form-control" id="altconno" placeholder="Alternate Contact" />
-                </b-col>
-                <b-col md="6" class="form-group">
-                  <label class="form-label" for="email">Email:</label>
-                  <input type="email" class="form-control" id="email" placeholder="Email" />
-                </b-col>
-                <b-col md="6" class="form-group">
-                  <label class="form-label" for="pno">Pin Code:</label>
-                  <input type="text" class="form-control" id="pno" placeholder="Pin Code" />
-                </b-col>
-                <b-col md="12" class="form-group">
-                  <label class="form-label" for="city">Town/City:</label>
-                  <input type="text" class="form-control" id="city" placeholder="Town/City" />
-                </b-col>
-              </b-row>
-              <hr />
-              <h5 class="mb-3">Security</h5>
-              <div class="row">
-                <b-col md="12" class="form-group">
-                  <label class="form-label" for="uname">User Name:</label>
-                  <input type="text" class="form-control" id="uname" placeholder="User Name" />
-                </b-col>
-                <b-col md="6" class="form-group">
-                  <label class="form-label" for="pass">Password:</label>
-                  <input type="password" class="form-control" id="pass" placeholder="Password" />
-                </b-col>
-                <b-col md="6" class="form-group">
-                  <label class="form-label" for="rpass">Repeat Password:</label>
-                  <input type="password" class="form-control" id="rpass" placeholder="Repeat Password " />
-                </b-col>
-              </div>
-              <div class="checkbox">
-                <label class="form-label"><input class="form-check-input me-2" type="checkbox" value="" id="flexchexked" />Enable Two-Factor-Authentication</label>
-              </div>
-              <button type="submit" class="btn btn-primary">Add New User</button>
-            </form>
-          </div>
-        </b-card-body>
-      </b-card>
-    </div> -->
   </b-row>
 </template>
+
+<script>
+import api from "@/plugins/axios";
+import Multiselect from "vue-multiselect";
+import { useToast } from "vue-toastification"; // Impor useToast
+
+export default {
+  components: {
+    Multiselect
+  },
+  data() {
+    return {
+      form: {
+        name: "",
+        username: "",
+        email: "",
+        password: "",
+        password_confirmation: "",
+        roles: []
+      },
+      roles: [],
+      loadingRoles: false
+    };
+  },
+  computed: {
+    passwordMismatch() {
+      return this.form.password && this.form.password_confirmation && this.form.password !== this.form.password_confirmation;
+    }
+  },
+  methods: {
+    async fetchRoles() {
+      this.loadingRoles = true;
+      try {
+        const response = await api.get("/roles", {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.$token}`
+          }
+        });
+        if (response.data.success) {
+          this.roles = response.data.result.data.map(role => ({
+            id: role.id,
+            name: role.name
+          }));
+        }
+      } catch (error) {
+        console.error("Error fetching roles:", error);
+      } finally {
+        this.loadingRoles = false;
+      }
+    },
+    submitForm() {
+      if (this.passwordMismatch) {
+        const toast = useToast(); // Gunakan toast
+        toast.error("Passwords do not match!"); // Tampilkan notifikasi error
+        return;
+      }
+      this.createUser();
+    },
+    async createUser() {
+      const toast = useToast(); // Gunakan toast
+
+      try {
+        const response = await api.post('/users/store', {
+          fullname: this.form.name,
+          username: this.form.username,
+          email: this.form.email,
+          password: this.form.password,
+          password_confirmation: this.form.password_confirmation,
+          roles: this.form.roles.map(role => role.id)
+        }, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${this.$token}`
+          }
+        });
+
+        if (response.data.success) {
+          this.$router.push('/user-list'); // Redirect ke halaman user list
+          toast.success("User successfully added!"); // Tampilkan notifikasi sukses
+        } else {
+          // Tampilkan pesan error dari response API
+          toast.error(response.data.message || "Failed to add user."); // Jika message tidak ada, gunakan pesan default
+        }
+      } catch (error) {
+        console.error("Error adding user:", error);
+        // Tampilkan pesan error dari response API jika ada
+        if (error.response && error.response.data && error.response.data.message) {
+          toast.error(error.response.data.message); // Ambil pesan error dari response
+        } else {
+          toast.error("An error occurred while adding the user."); // Pesan default jika tidak ada pesan error
+        }
+      }
+    },
+  },
+  mounted() {
+    this.fetchRoles();
+  }
+};
+</script>
+
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>

@@ -10,148 +10,173 @@
             <a href="#" class="btn btn-primary" title="User Add" @click.prevent="navigateToRoute('default.user-add')">User Add</a>
           </div>
         </div>
-        <div class="card-body px-0">
-          <div class="table-responsive">
-            <table id="user-list-table" class="table table-striped" role="grid" data-toggle="data-table">
-              <thead>
-                <tr class="ligth">
-                  <th>Profile</th>
-                  <th>Name</th>
-                  <th>Contact</th>
-                  <th>Email</th>
-                  <th>Country</th>
-                  <th>Status</th>
-                  <th>Company</th>
-                  <th>Join Date</th>
-                  <th style="min-width: 100px">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                <table-widget :list="tableData" />
-              </tbody>
-            </table>
+
+        <!-- New Permission Modal -->
+        <div class="modal fade" id="new-permission" ref="newPermissionModal"
+             data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+             aria-labelledby="staticBackdropPermissionLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropPermissionLabel">Add Permission</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <div class="form-group">
+                  <label class="form-label">Permission title</label>
+                  <input type="text" class="form-control" placeholder="Permission Title" />
+                </div>
+                <div class="text-start">
+                  <button type="button" class="btn btn-primary me-2" data-bs-dismiss="modal">Save</button>
+                  <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
+
+        <!-- Table Widget -->
+        <TableWidget 
+          :rows="tableData" 
+          :columns="columns"
+          :buttonEdit="{ visible: true, disable: false }"
+          :buttonDelete="{ visible: true, disable: false }"
+          :pagination="pagination"
+          @page-changed="changePage"
+          @delete="deleteRow"
+          @edit="openNewPermissionModal"
+        />
       </div>
     </b-col>
   </b-row>
 </template>
 <script>
-import TableWidget from '@/components/widgets/users/TableWidget.vue'
+import { ref, onMounted, getCurrentInstance } from 'vue';
+import TableWidget from '@/components/widgets/users/TableWidgetUsers.vue';
+import api from '@/plugins/axios';
+import { Modal } from 'bootstrap';
+
 export default {
   components: {
-    TableWidget
+    TableWidget,
   },
   setup() {
-    const tableData = [
-      {
-        image: require('@/assets/images/shapes/06.png'),
-        name: 'Anna Sthesia',
-        contact: '(760) 756 7568',
-        email: 'annasthesia@gmail.com',
-        country: 'USA',
-        status: 'Active',
-        company: 'Acme Corporation',
-        date: '2019/12/01',
-        color: 'bg-primary'
-      },
-      {
-        image: require('@/assets/images/shapes/02.png'),
-        name: 'Brock Lee',
-        contact: '+62 5689 458 658',
-        email: 'brocklee@gmail.com',
-        country: 'Indonesia',
-        status: 'Active',
-        company: 'Soylent Corp',
-        date: '2019/12/01',
-        color: 'bg-primary'
-      },
-      {
-        image: require('@/assets/images/shapes/03.png'),
-        name: 'Dan Druff',
-        contact: '+55 6523 456 856',
-        email: 'dandruff@gmail.com',
-        country: 'Brazil',
-        status: 'Pending',
-        company: 'Umbrella Corporation',
-        date: '2019/12/01',
-        color: 'bg-warning'
-      },
-      {
-        image: require('@/assets/images/shapes/04.png'),
-        name: 'Hans Olo',
-        contact: '+91 2586 253 125',
-        email: 'hansolo@gmail.com',
-        country: 'India',
-        status: 'Inactive',
-        company: 'Vehement Capital',
-        date: '2019/12/01',
-        color: 'bg-danger'
-      },
-      {
-        image: require('@/assets/images/shapes/05.png'),
-        name: 'Lynn Guini',
-        contact: '+27 2563 456 589',
-        email: 'lynnguini@gmail.com',
-        country: 'Africa',
-        status: 'Active',
-        company: 'Massive Dynamic',
-        date: '2019/12/01',
-        color: 'bg-primary'
-      },
-      {
-        image: require('@/assets/images/shapes/06.png'),
-        name: 'Eric Shun',
-        contact: '+55 25685 256 589',
-        email: 'ericshun@gmail.com',
-        country: 'Brazil',
-        status: 'Pending',
-        company: 'Globex Corporation',
-        date: '2019/12/01',
-        color: 'bg-warning'
-      },
-      {
-        image: require('@/assets/images/shapes/03.png'),
-        name: 'aaronottix',
-        contact: '(760) 756 7568',
-        email: 'budwiser@ymail.com',
-        country: 'USA',
-        status: 'Hold',
-        company: 'Acme Corporation',
-        date: '2019/12/01',
-        color: 'bg-info'
-      },
-      {
-        image: require('@/assets/images/shapes/05.png'),
-        name: 'Marge Arita',
-        contact: '+27 5625 456 589',
-        email: 'margearita@gmail.com',
-        country: 'Africa',
-        status: 'Complite',
-        company: 'Vehement Capital',
-        date: '2019/12/01',
-        color: 'bg-success'
-      },
-      {
-        image: require('@/assets/images/shapes/02.png'),
-        name: 'Bill Dabear',
-        contact: '+55 2563 456 589',
-        email: 'billdabear@gmail.com',
-        country: 'Brazil',
-        status: 'Active',
-        company: 'Massive Dynamic',
-        date: '2019/12/01',
-        color: 'bg-primary'
+    const tableData = ref([]);
+    const pagination = ref({
+      current_page: 1,
+      last_page: 1,
+      prev_page_url: null,
+      next_page_url: null,
+    });
+
+    // Ambil instance Vue untuk mendapatkan globalProperties
+    const instance = getCurrentInstance();
+    const token = instance?.appContext.config.globalProperties.$token || '';
+
+    // Fetch data dari API
+    const fetchData = async (page = 1) => {
+      try {
+        const response = await api.get('/users', {
+          params: { page },
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        // Update data tabel
+        tableData.value = response.data.result.data.map((user) => ({
+          id: user.id,
+          fullname: user.fullname,
+          email: user.email,
+          roles: user.roles.join(', '),
+        }));
+
+        // Update pagination
+        pagination.value = {
+          current_page: response.data.result.current_page,
+          last_page: response.data.result.last_page,
+          prev_page_url: response.data.result.prev_page_url,
+          next_page_url: response.data.result.next_page_url,
+        };
+      } catch (error) {
+        console.error('Error fetching data:', error);
       }
-    ]
+    };
+
+    // Fungsi untuk mengganti halaman
+    const changePage = (page) => {
+      if (page >= 1 && page <= pagination.value.last_page) {
+        fetchData(page);
+      }
+    };
+
+    // Fungsi untuk menghapus baris
+    const deleteRow = (id) => {
+      instance.proxy.$swal
+        .fire({
+          title: 'Are you sure?',
+          text: "You won't be able to revert this!",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#d33',
+          cancelButtonColor: '#3085d6',
+          confirmButtonText: 'Yes, delete it!',
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+            api
+              .delete(`/api/data/${id}/destroy`, {
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: `Bearer ${token}`,
+                },
+              })
+              .then(() => {
+                // Hapus dari array lokal jika diperlukan
+                tableData.value = tableData.value.filter((item) => item.id !== id);
+                instance.proxy.$swal.fire('Deleted!', 'The row has been deleted.', 'success');
+              })
+              .catch((error) => {
+                console.error('Error deleting row:', error);
+                instance.proxy.$swal.fire('Error!', 'Failed to delete the row.', 'error');
+              });
+          }
+        });
+    };
+
+    // Fungsi untuk membuka modal
+    const openNewPermissionModal = () => {
+      const modalElement = instance.refs.newPermissionModal;
+      const modalInstance = new Modal(modalElement);
+      modalInstance.show();
+    };
+
+    // Fetch data saat komponen dimount
+    onMounted(() => fetchData());
+
     return {
-      tableData
-    }
+      tableData,
+      pagination,
+      columns: [
+        { key: 'fullname', label: 'Name' },
+        { key: 'email', label: 'Email' },
+        { key: 'roles', label: 'Roles' },
+      ],
+      changePage,
+      deleteRow,
+      openNewPermissionModal,
+    };
   },
   methods: {
     navigateToRoute(routeName) {
       this.$router.push({ name: routeName });
-    }
-  }
-}
+    },
+  },
+};
 </script>
+<style scoped>
+.modal-backdrop.show {
+  background-color: rgba(0, 0, 0, 0.8) !important;
+}
+</style>
