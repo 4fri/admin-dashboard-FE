@@ -14,7 +14,7 @@ const authChildRoutes = (prefix) => [
   {
     path: 'login',
     name: prefix + '.login',
-    meta: { auth: true, name: 'Login' },
+    meta: { auth: false, name: 'Login' },
     component: () => import('@/views/auth/default/SignIn.vue')
   },
   {
