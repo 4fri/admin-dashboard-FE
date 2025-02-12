@@ -20,7 +20,7 @@ import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
 import Swal from 'sweetalert2';
 
-const Token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNzM5MzM1OTY1LCJleHAiOjE3MzkzMzk1NjUsIm5iZiI6MTczOTMzNTk2NSwianRpIjoiZXlNZjJMbDhiTGUxT1FmVSIsInN1YiI6IjllMzExMjI3LTc4OWMtNDlhMS1hNGZmLWQ3Yzk0MjM0NWIzOCIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.dh_wGfCOy0zfmwt9KNqSkAgCdwtxKyOcoq2OrnAuVQo';
+const Token = localStorage.getItem('access_token') || '';
 const options = {
     timeout: 3000, // Durasi toast
     position: "bottom-right", // Posisi toast
