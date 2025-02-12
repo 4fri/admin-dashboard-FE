@@ -113,16 +113,15 @@ export default {
   methods: {
     async fetchRoles() {
       this.loadingRoles = true;
-      const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNzM5MjQ1NzI4LCJleHAiOjE3MzkyNDkzMjgsIm5iZiI6MTczOTI0NTcyOCwianRpIjoiak9vUlZQMnhaeFlvVkFMMyIsInN1YiI6IjllMmVmODNjLTk2YmMtNDZhMi04OTk0LTM0YTVjYWZiYzc5OCIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.nlI1hqX4XOkwqGqk0ll1nf3z2wZNTIkJOQ8x-SsdXxo';
       try {
         const response = await api.get("/roles", {
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
+            'Authorization': `Bearer ${this.$token}`
           }
         });
         if (response.data.success) {
-          this.roles = response.data.result.map(role => ({
+          this.roles = response.data.result.data.map(role => ({
             id: role.id,
             name: role.name
           }));
@@ -142,7 +141,6 @@ export default {
       this.createUser();
     },
     async createUser() {
-      const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNzM5MjQ1NzI4LCJleHAiOjE3MzkyNDkzMjgsIm5iZiI6MTczOTI0NTcyOCwianRpIjoiak9vUlZQMnhaeFlvVkFMMyIsInN1YiI6IjllMmVmODNjLTk2YmMtNDZhMi04OTk0LTM0YTVjYWZiYzc5OCIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.nlI1hqX4XOkwqGqk0ll1nf3z2wZNTIkJOQ8x-SsdXxo';
       const toast = useToast(); // Gunakan toast
 
       try {
@@ -156,7 +154,7 @@ export default {
         }, {
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`
+            Authorization: `Bearer ${this.$token}`
           }
         });
 
