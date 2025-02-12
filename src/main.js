@@ -20,7 +20,6 @@ import Toast, { useToast } from "vue-toastification";
 import "vue-toastification/dist/index.css";
 import Swal from 'sweetalert2';
 
-const Token = localStorage.getItem('access_token') || '';
 const toastOptions = {
     timeout: 3000,
     position: "bottom-right",
@@ -46,7 +45,6 @@ app.mixin(globalMixin)
 // Gunakan API, SweetAlert, dan Toast sebagai global instance
 app.config.globalProperties.$swal = Swal;
 app.config.globalProperties.$api = api;
-app.config.globalProperties.$token = Token;
 app.config.globalProperties.$toast = useToast(); // Menjadikan toast sebagai global instance
 
 app.mount('#app')
