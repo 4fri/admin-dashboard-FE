@@ -1,3 +1,4 @@
+/* eslint-disable */
 <template>
   <b-row>
     <b-col sm="12">

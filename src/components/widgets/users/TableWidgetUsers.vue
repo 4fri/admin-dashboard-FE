@@ -60,9 +60,9 @@
     </div>
 
     <!-- PAGINATION -->
-    <div class="col-md-6 d-flex justify-content-md-end justify-content-center mt-3 mt-md-0">
+    <div class="d-flex justify-content-end mt-3">
       <nav aria-label="Page navigation example">
-        <ul class="pagination justify-content-end">
+        <ul class="pagination">
           <li class="page-item" :class="{ disabled: !pagination.prev_page_url }">
             <a
               class="page-link"
@@ -89,6 +89,7 @@
     </div>
   </div>
 </template>
+
 <script>
 export default {
   props: {
