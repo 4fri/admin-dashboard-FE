@@ -8,7 +8,7 @@
             <th v-for="(column, index) in columns" :key="index">
               {{ column.label }}
             </th>
-            <th v-if="buttonEdit || buttonDelete || buttonNotif" class="text-center">Action</th>
+            <th v-if="buttonEdit === true || buttonDelete === true" class="text-center">Action</th>
           </tr>
         </thead>
         <tbody>
@@ -52,8 +52,8 @@
               </div>
             </td>
           </tr>
-          <tr v-if="rows.length === 0">
-            <td :colspan="columns.length + 2" class="text-center">No data available</td>
+          <tr v-if="rows && rows.length === 0 || !rows">
+            <td :colspan="columns ? columns.length + 2 : 1" class="text-center">No data available</td>
           </tr>
         </tbody>
       </table>
@@ -104,14 +104,14 @@ export default {
     buttonEdit: {
       type: Object,
       default: () => ({
-        visible: true,
+        visible: false,
         disable: false,
       }),
     },
     buttonDelete: {
       type: Object,
       default: () => ({
-        visible: true,
+        visible: false,
         disable: false,
       }),
     },

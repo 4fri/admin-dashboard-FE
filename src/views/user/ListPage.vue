@@ -12,6 +12,11 @@
           </div>
         </div>
 
+        <!-- Skeleton Loader -->
+        <div v-if="loading" class="p-3">
+          <div v-for="n in 5" :key="n" class="skeleton-row"></div>
+        </div>
+
         <!-- New Permission Modal -->
         <div class="modal fade" id="new-permission" ref="newPermissionModal"
              data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
@@ -38,6 +43,7 @@
 
         <!-- Table Widget -->
         <TableWidget 
+          v-if="!loading"
           :rows="tableData" 
           :columns="columns"
           :buttonEdit="{ visible: true, disable: false }"
@@ -75,14 +81,16 @@ export default {
         { key: 'roles', label: 'Roles' },
       ],
       token: '',
+      loading: true,
     };
   },
   created() {
-    this.token =  localStorage.getItem('access_token');
+    this.token = localStorage.getItem('access_token');
     this.fetchData();
   },
   methods: {
     async fetchData(page = 1) {
+      this.loading = true;
       try {
         const response = await api.get('/users', {
           params: { page },
@@ -107,6 +115,8 @@ export default {
         };
       } catch (error) {
         console.error('Error fetching data:', error);
+      } finally {
+        this.loading = false;
       }
     },
     changePage(page) {
@@ -141,7 +151,6 @@ export default {
               .catch((error) => {
                 console.error('Error deleting row:', error);
                 this.$toast.error("Data gagal dihapus!");
-
               });
           }
         });
@@ -160,5 +169,12 @@ export default {
 <style scoped>
 .modal-backdrop.show {
   background-color: rgba(0, 0, 0, 0.8) !important;
+}
+
+.skeleton-row {
+  height: 20px;
+  background: #e0e0e0;
+  margin: 10px 0;
+  border-radius: 4px;
 }
 </style>
