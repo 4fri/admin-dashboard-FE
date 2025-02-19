@@ -8,7 +8,7 @@
             <th v-for="(column, index) in columns" :key="index">
               {{ column.label }}
             </th>
-            <th v-if="buttonEdit || buttonDelete || buttonNotif" class="text-center">Action</th>
+            <th v-if="buttonEdit === true || buttonDelete === true" class="text-center">Action</th>
           </tr>
         </thead>
         <tbody>
@@ -52,17 +52,17 @@
               </div>
             </td>
           </tr>
-          <tr v-if="rows.length === 0">
-            <td :colspan="columns.length + 2" class="text-center">No data available</td>
+          <tr v-if="rows && rows.length === 0 || !rows">
+            <td :colspan="columns ? columns.length + 2 : 1" class="text-center">No data available</td>
           </tr>
         </tbody>
       </table>
     </div>
 
     <!-- PAGINATION -->
-    <div class="col-md-6 d-flex justify-content-md-end justify-content-center mt-3 mt-md-0">
+    <div class="d-flex justify-content-end mt-3">
       <nav aria-label="Page navigation example">
-        <ul class="pagination justify-content-end">
+        <ul class="pagination">
           <li class="page-item" :class="{ disabled: !pagination.prev_page_url }">
             <a
               class="page-link"
@@ -89,6 +89,7 @@
     </div>
   </div>
 </template>
+
 <script>
 export default {
   props: {
@@ -103,14 +104,14 @@ export default {
     buttonEdit: {
       type: Object,
       default: () => ({
-        visible: true,
+        visible: false,
         disable: false,
       }),
     },
     buttonDelete: {
       type: Object,
       default: () => ({
-        visible: true,
+        visible: false,
         disable: false,
       }),
     },

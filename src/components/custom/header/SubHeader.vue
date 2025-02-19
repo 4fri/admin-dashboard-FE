@@ -5,7 +5,7 @@
         <b-col md="12">
           <div class="d-flex justify-content-between align-items-center flex-wrap">
             <div>
-              <h1>Hello, Ahmad Fauzi!</h1>
+              <h1>Hello, {{ user.fullname }}!</h1>
               <p>Welcome Back To Your Dashboard Account.</p>
             </div>
           </div>
@@ -23,5 +23,16 @@
   </div>
 </template>
 <script>
-export default {}
+export default {
+  name: 'SubHeader',
+  data() {
+    return {
+      user: {},
+    };
+  },
+  mounted() {
+    this.user = JSON.parse(localStorage.getItem('user'));
+    // this.user = { fullname : 'Ahmad Fauzi Ganteng' };
+  },
+}
 </script>

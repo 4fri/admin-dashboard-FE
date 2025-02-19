@@ -26,10 +26,11 @@
             <table class="table table-bordered">
               <thead>
                 <tr>
-                  <th></th>
-                  <th class="text-center" v-for="(role, index) in roles" :key="index">
-                    {{ role.title }}
-                    <div style="float: right">
+                  <th>No</th>
+                  <th>Permissions</th>
+                  <th class="text-center" v-for="(role, index) in dataRolesAndPermissions.roles" :key="index">
+                    {{ role.name }}
+                    <!-- <div style="float: right">
                       <a class="btn btn-sm btn-icon text-primary flex-end" data-bs-toggle="tooltip" title="Edit User" href="#">
                         <span class="btn-inner">
                           <svg @click="editrole(role.title, index)" width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -48,15 +49,17 @@
                           </svg>
                         </span>
                       </a>
-                    </div>
+                    </div> -->
                   </th>
                 </tr>
               </thead>
               <tbody>
-                <tr class="" v-for="(permission, index) in permissions" :key="index">
+                <tr class="" v-for="(permission, index) in dataRolesAndPermissions.permissions" :key="index">
+                  <td>{{index + 1}}</td>
                   <td class="">
-                    {{ permission.title }}
-                    <div style="float: right">
+                    {{ permission.name }}
+                    
+                    <!-- <div style="float: right">
                       <a class="btn btn-sm btn-icon text-primary flex-end" data-bs-toggle="tooltip" title="Edit User" href="#">
                         <span class="btn-inner">
                           <svg @click="editpermission(permission.title, index)" width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -75,11 +78,14 @@
                           </svg>
                         </span>
                       </a>
-                    </div>
+                    </div> -->
                   </td>
-                  <td v-for="(role, index) in roles" :key="index" class="text-center">
-                    <input class="form-check-input" type="checkbox" checked v-if="role.status === 'true' && permission.status === 'true'" />
-                    <input class="form-check-input" type="checkbox" v-else />
+                    <td v-for="role in dataRolesAndPermissions.roles" :key="role.id" class="text-center">
+                    <input 
+                      type="checkbox" 
+                      :checked="hasPermission(role, permission.id)" 
+                      @change="togglePermission(role.id, permission.id, $event)"
+                    >
                   </td>
                 </tr>
               </tbody>
@@ -93,7 +99,7 @@
     </b-col>
   </b-row>
   <!-- New Permission modal -->
-  <div class="modal fade" id="new-permission" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropPermissionLabel" aria-hidden="true">
+  <!-- <div class="modal fade" id="new-permission" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropPermissionLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -112,9 +118,9 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
   <!-- New Role modal -->
-  <div class="modal fade" id="new-role" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropRoleLabel" aria-hidden="true">
+  <!-- <div class="modal fade" id="new-role" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropRoleLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -144,93 +150,78 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 </template>
 <script>
-export default {
+import api from '@/plugins/axios';
+
+
+
+export default {  
   name: 'admin-view',
   data() {
     return {
-      roles: [
-        {
-          title: 'Admin',
-          status: 'true'
-        },
-        {
-          title: 'Demo Admin',
-          status: 'false'
-        },
-        {
-          title: 'User',
-          status: 'true'
-        }
-      ],
+      token: '',
+      dataRolesAndPermissions: {},
+      rolePermissions: {},
       rolename: 'Demo User',
-      roleeditname: '',
       roleid: '',
-      permissions: [
-        {
-          title: 'Role',
-          status: 'true'
-        },
-        {
-          title: 'Role Add',
-          status: 'false'
-        },
-        {
-          title: 'Role List',
-          status: 'true'
-        },
-        {
-          title: 'Permission',
-          status: 'false'
-        },
-        {
-          title: 'Permission Add',
-          status: 'false'
-        },
-        {
-          title: 'Permission List',
-          status: 'true'
-        }
-      ],
-      permissionsname: 'Demo Permission',
-      permissionseditname: '',
-      permissionsid: ''
+      statusChecked : true,
+      checkedData : {}
     }
   },
+  created() {
+    this.token = localStorage.getItem('access_token');
+    this.fetchData();
+  },
   methods: {
+    async fetchData(){
+      try {
+        const response = await api.get('/roles', {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${this.token}`,
+          },
+        });
+
+        this.dataRolesAndPermissions = response.data.result;
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    },
     addrole() {
       const roledata = {
         title: this.rolename
       }
       this.roles.push(roledata)
     },
-    deleteRole(roleid) {
-      this.roles.splice(roleid, 1)
+    hasPermission(role, permissionId) {
+      return role.permissions.some(permissions => permissions.id === permissionId); 
     },
-    editrole(title, roleid) {
-      this.roleeditname = title
-      this.roleid = roleid
-    },
-    updaterole() {
-      this.roles[this.roleid].title = this.roleeditname
-    },
-    addpermission() {
-      const permissiondata = {
-        title: this.permissionsname
+    togglePermission(roleId, permissionId, event) {
+      this.$swal.fire({
+      title: 'Loading...',
+      text: 'Please wait',
+      icon: 'info',
+      buttons: false,
+      timer: 2000,
+      closeOnClickOutside: false,
+      closeOnEsc: false,
+      }).then(() => {
+      if (event.target.checked) {
+        this.statusChecked = true;
+        console.log('add permission');
+      } else {
+        this.statusChecked = false;
+        console.log('remove permission');
       }
-      this.permissions.push(permissiondata)
-    },
-    deletepermission(permissionsid) {
-      this.permissions.splice(permissionsid, 1)
-    },
-    editpermission(title, permissionsid) {
-      this.permissionseditname = title
-      this.permissionsid = permissionsid
-    },
-    updatepermission() {
-      this.permissions[this.permissionsid].title = this.permissionseditname
+      this.checkedData = {
+        role_id: roleId,
+        permission_id: permissionId,
+        status: this.statusChecked
+      }
+      console.log(this.checkedData);
+      });
     }
   }
 }

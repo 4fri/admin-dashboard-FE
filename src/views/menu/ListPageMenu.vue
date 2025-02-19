@@ -46,8 +46,8 @@
           v-if="!loading"
           :rows="tableData" 
           :columns="columns"
-          :buttonEdit="{ visible: true, disable: false }"
-          :buttonDelete="{ visible: true, disable: false }"
+          :buttonEdit="{ visible: false, disable: false }"
+          :buttonDelete="{ visible: false, disable: false }"
           :pagination="pagination"
           @page-changed="changePage"
           @delete="deleteRow"
@@ -92,7 +92,7 @@ export default {
     async fetchData(page = 1) {
       this.loading = true;
       try {
-        const response = await api.get('/users', {
+        const response = await api.get('/menus', {
           params: { page },
           headers: {
             'Content-Type': 'application/json',
@@ -100,11 +100,14 @@ export default {
           },
         });
 
-        this.tableData = response.data.result.data.map((user) => ({
-          id: user.id,
-          fullname: user.fullname,
-          email: user.email,
-          roles: user.roles.join(', '),
+        this.tableData = response.data.result.data.map((menu) => ({
+          id: menu.id,
+          name: menu.name,
+          icon: menu.icon,
+          sort_order: menu.sort_order,
+          route: menu.route,
+          parent_id: menu.parent_id,
+
         }));
 
         this.pagination = {

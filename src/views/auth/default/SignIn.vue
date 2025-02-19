@@ -73,10 +73,11 @@ const handleLogin = async () => {
     }
 
     const data = response.data;
+    const expirationTime = Date.now() + 90000 * 1000; // 90.000 detik = 25 jam
     // Simpan token atau data pengguna sesuai kebutuhan
     localStorage.setItem('access_token', data.access_token); // Simpan token di localStorage
-    localStorage.setItem('user', JSON.stringify(data.user)); // Simpan data user di localStorage
-    console.log('Login berhasil:', data);
+    localStorage.setItem('user', JSON.stringify(data.result)); // Simpan data user di localStorage
+    localStorage.setItem('expiry_time', expirationTime);
     // Redirect ke halaman landingPage
     router.push({ path: '/landingPage' });
   } catch (error) {

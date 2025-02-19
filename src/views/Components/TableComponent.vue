@@ -15,73 +15,8 @@
               <button class="nav-link text-dark" id="pills-chart-tab" data-bs-toggle="pill" data-bs-target="#pills-chart" type="button" role="tab" aria-controls="pills-chart" aria-selected="false">Chart</button>
             </li>
           </ul>
-
-        </div>
-        <!-- Filter -->
-        <div class="d-flex flex-column flex-md-row align-items-center">
-          <input type="text" class="form-control border-primary me-3 mb-2 mb-md-0" placeholder="Search..." v-model="searchTerm" >
-          <div class="dropdown">
-            <button class="btn btn-outline-primary d-flex align-items-center" type="button" id="filter" data-bs-toggle="dropdown" aria-expanded="false">
-              <i class="ri-equalizer-line"></i> Filters
-            </button>
-            <ul class="dropdown-menu dropdown-menu-start p-3 rounded-4" aria-labelledby="filter" style="min-width: 300px;">
-              <h5 class="mb-3">Filter</h5>
-              <li class="mb-2">
-                <label for="dateRangePicker" class="form-label">Select Date</label>
-                <input type="text"
-                  @change="validateAndApplyFilters"
-                  class="form-control border-secondary me-3 mb-2 mb-md-0 rounded-4" 
-                  style="max-width: 260px" 
-                  id="dateRangePicker"
-                  placeholder="Select Date Range">
-              </li>
-              <li class="mb-2">
-                <label for="statusFilter" class="form-label">Status</label>
-                <select class="form-select rounded-4" v-model="filteredStatus" @change="applyFilters" id="statusFilter">
-                  <option value="">All</option>
-                  <option value="draft">Draft</option>
-                  <option value="final">Final</option>
-                  <option value="verified">Verified</option>
-                  <option value="on_process">On Process</option>
-                  <option value="done">Done</option>
-                  <option value="approved">Approved</option>
-                  <option value="late">Late</option>
-                  <option value="reject">Rejected</option>
-                </select>
-              </li>
-              <li class="mb-2">
-                <label for="taskCategoryFilter" class="form-label">Task Category</label>
-                <select class="form-select rounded-4" v-model="filteredCategory" @change="applyFilters" id="taskCategoryFilter">
-                  <option value="">All</option>
-                  <option v-for="category in categories" :key="category.id" :value="category.id">{{ category.name }}</option>
-                </select>
-              </li>
-              <li class="mb-2" v-if="filterDivisionEmployee">
-                <label for="divisionFilter" class="form-label">Division</label>
-                <select class="form-select rounded-4" v-model="filteredDivision" @change="applyFilters" id="divisionFilter">
-                  <option value="">All</option>
-                  <option v-for="division in divisions" :key="division.division_code" :value="division.division_code">
-                    {{ division.division_name }}
-                  </option>
-                </select>
-              </li>
-              <li class="mb-2" v-if="filterDivisionEmployee">
-                <label for="employeeNameFilter" class="form-label">Employee Name</label>
-                <select class="form-select rounded-4" v-model="filteredEmployeeName" @change="applyFilters" id="employeeNameFilter">
-                  <option value="">All</option>
-                  <option v-for="user in users" :key="user.id" :value="user.name">
-                    {{ user.name }}
-                  </option>
-                </select>
-              </li>
-              <li>
-                <button class="btn btn-danger w-100 rounded-4 my-2" @click="resetFilters">Reset Filters</button>
-              </li>
-            </ul>
-          </div>
         </div>
       </div>
-      
       <div class="tab-content" id="pills-tabContent">
         <!-- List -->
         <div class="row tab-pane fade show active" id="pills-alert" role="tabpanel" aria-labelledby="pills-alert-tab">
@@ -298,7 +233,7 @@
           <div class="col-lg-12">
             <section class="card">
               <div class="card-body">
-                  <p>Section Charts</p>
+                <chart-dashboard />
               </div>
             </section>
           </div>
@@ -312,11 +247,14 @@
   import { onMounted } from 'vue'
   import AOS from 'aos'
   import DataTable from '@/components/DataTable.vue'
+  import ChartDashboard from '@/views/Components/ChartDashboard.vue'
+
   
   export default {
     name: 'TableComponent',
     components: {
-      DataTable
+      DataTable,
+      ChartDashboard
     },
     setup() {
       const DataTableOptions = {

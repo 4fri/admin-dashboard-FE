@@ -111,6 +111,12 @@ const defaultChildRoutes = (prefix) => [
     component: () => import('@/views/user/ListPage.vue')
   },
   {
+    path: '/menu-list',
+    name: prefix + '.menu-list',
+    meta: { auth: true, name: 'Menu List', isBanner: true },
+    component: () => import('@/views/menu/ListPageMenu.vue')
+  },
+  {
     path: '/user-add',
     name: prefix + '.user-add',
     meta: { auth: true, name: 'User Add', isBanner: true },
@@ -342,14 +348,28 @@ const router = createRouter({
 
 // Middleware navigasi
 router.beforeEach((to, from, next) => {
-  const isAuthenticated = localStorage.getItem('access_token') !== null
+  const accessToken = localStorage.getItem('access_token')
+  const expiryTime = localStorage.getItem('expiry_time')
+  const isAuthenticated = accessToken !== null
 
-  if (to.meta.auth && !isAuthenticated) {
-    // Jika rute memerlukan otentikasi dan tidak ada token, tetap di halaman login
-    next({ name: 'auth.login' }) // Ganti dengan nama rute login Anda
-  } else {
-    next() // Lanjutkan ke rute yang diminta
+  // Cek apakah session expired
+  if (expiryTime && Date.now() > Number(expiryTime)) {
+    console.log('Session expired, logging out...')
+    localStorage.removeItem('access_token')
+    localStorage.removeItem('user')
+    localStorage.removeItem('expiry_time')
+
+    if (to.meta.auth) {
+      return next({ name: 'auth.login' }) // Redirect ke login jika rute butuh autentikasi
+    }
   }
+
+  // Cek jika user mengakses halaman yang butuh autentikasi
+  if (to.meta.auth && !isAuthenticated) {
+    return next({ name: 'auth.login' }) // Redirect ke login jika tidak ada token
+  }
+
+  next() // Lanjutkan ke halaman yang diminta
 })
 
 export default router

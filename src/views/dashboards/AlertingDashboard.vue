@@ -8,16 +8,6 @@
             :modules="modules"
             :slides-per-view="4"
             :space-between="32"
-            :breakpoints="{
-              320: { slidesPerView: 1 },
-              550: { slidesPerView: 2 },
-              991: { slidesPerView: 3 },
-              1400: { slidesPerView: 3 },
-              1500: { slidesPerView: 4 },
-              1920: { slidesPerView: 4 },
-              2040: { slidesPerView: 7 },
-              2440: { slidesPerView: 8 }
-            }"
             :navigation="{
               nextEl: '#blog-tranding-next',
               prevEl: '#blog-tranding-prev'
@@ -51,240 +41,57 @@
 </template>
 
 <script>
-import { onMounted, ref } from 'vue'
-import { Navigation } from 'swiper'
-import { Swiper, SwiperSlide } from 'swiper/vue'
-// import AnalyticsWidget from '@/components/widgets/AnalyticsWidget.vue'
-import AOS from 'aos'
-import TableComponent from '@/views/Components/TableComponent.vue'
+import { Navigation } from 'swiper';
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import AOS from 'aos';
+import TableComponent from '@/views/Components/AlertTableComponent.vue';
 
 export default {
   components: {
     Swiper,
     SwiperSlide,
-    // AnalyticsWidget,
-    TableComponent
+    TableComponent,
   },
-  setup() {
-    const modules = [Navigation]
-    const grossSaleChart = ref({
-      series: [
+  data() {
+    return {
+      modules: [Navigation],
+      swiperItems: [
         {
-          name: 'total',
-          data: [94, 80, 94, 80, 94, 80, 94]
+          size: 90,
+          amount: '560K',
+          subTitle: 'Customer',
+          color: 'primary',
         },
         {
-          name: 'pipline',
-          data: [72, 60, 84, 60, 74, 60, 78]
-        }
+          size: 80,
+          amount: '185K',
+          subTitle: 'Contract Vendor',
+          color: 'info',
+        },
+        {
+          size: 70,
+          amount: '375K',
+          subTitle: 'Licenses',
+          color: 'primary',
+        },
+        {
+          size: 60,
+          amount: '742K',
+          subTitle: 'Assets',
+          color: 'info',
+        },
       ],
-      options: {
-        chart: {
-          fontFamily: '"Inter", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
-          height: 245,
-          type: 'area',
-          toolbar: {
-            show: false
-          },
-          sparkline: {
-            enabled: false
-          }
-        },
-        colors: ['#3a57e8', '#079aa2'],
-        dataLabels: {
-          enabled: false
-        },
-        stroke: {
-          curve: 'smooth',
-          width: 3
-        },
-        yaxis: {
-          show: true,
-          labels: {
-            show: true,
-            minWidth: 19,
-            maxWidth: 19,
-            style: {
-              colors: '#8A92A6'
-            },
-            offsetX: -5
-          }
-        },
-        legend: {
-          show: false
-        },
-        xaxis: {
-          labels: {
-            minHeight: 22,
-            maxHeight: 22,
-            show: true,
-            style: {
-              colors: '#8A92A6'
-            }
-          },
-          lines: {
-            show: false // or just here to disable only x axis grids
-          },
-          categories: ['Jan', 'Feb', 'Mar', 'Apr', 'Jun', 'Jul', 'Aug']
-        },
-        grid: {
-          show: false
-        },
-        fill: {
-          type: 'gradient',
-          gradient: {
-            shade: 'dark',
-            type: 'vertical',
-            shadeIntensity: 0,
-            gradientToColors: undefined, // optional, if not defined - uses the shades of same color in series
-            inverseColors: true,
-            opacityFrom: 0.4,
-            opacityTo: 0.1,
-            stops: [0, 50, 80],
-            colors: ['#3a57e8', '#4bc7d2']
-          }
-        },
-        tooltip: {
-          enabled: true
-        }
-      }
-    })
-    const earningChart = ref({
-      series: [55, 75],
-      options: {
-        chart: {
-          height: 260,
-          type: 'radialBar'
-        },
-        colors: ['#4bc7d2', '#3a57e8'],
-        plotOptions: {
-          radialBar: {
-            hollow: {
-              margin: 10,
-              size: '50%'
-            },
-            track: {
-              margin: 10,
-              strokeWidth: '50%'
-            },
-            dataLabels: {
-              show: false
-            }
-          }
-        }
-      }
-    })
-    const conversionChart = ref({
-      series: [
-        {
-          name: 'Successful deals',
-          data: [30, 50, 35, 60, 40, 60, 60, 30, 50, 35]
-        },
-        {
-          name: 'Failed deals',
-          data: [40, 50, 55, 50, 30, 80, 30, 40, 50, 55]
-        }
-      ],
-      options: {
-        chart: {
-          type: 'bar',
-          height: 230,
-          stacked: true,
-          toolbar: {
-            show: false
-          }
-        },
-        colors: ['#3a57e8', '#4bc7d2'],
-        plotOptions: {
-          bar: {
-            horizontal: false,
-            columnWidth: '28%',
-            endingShape: 'rounded',
-            borderRadius: 5
-          }
-        },
-        legend: {
-          show: false
-        },
-        dataLabels: {
-          enabled: false
-        },
-        stroke: {
-          show: true,
-          width: 2,
-          colors: ['transparent']
-        },
-        xaxis: {
-          categories: ['S', 'M', 'T', 'W', 'T', 'F', 'S', 'M', 'T', 'W'],
-          labels: {
-            minHeight: 20,
-            maxHeight: 20,
-            style: {
-              colors: '#8A92A6'
-            }
-          }
-        },
-        yaxis: {
-          title: {
-            text: ''
-          },
-          labels: {
-            minWidth: 19,
-            maxWidth: 19,
-            style: {
-              colors: '#8A92A6'
-            }
-          }
-        },
-        fill: {
-          opacity: 1
-        },
-        tooltip: {
-          y: {
-            formatter: function (val) {
-              return '$ ' + val + ' thousands'
-            }
-          }
-        }
-      }
-    })
-    const swiperItems = ref([
-      {
-        size: 90,
-        amount: '560K',
-        subTitle: 'Customer',
-        color: 'primary'
+    };
+  },
+  mounted() {
+    AOS.init({
+      disable: function () {
+        var maxWidth = 996;
+        return window.innerWidth < maxWidth;
       },
-      {
-        size: 80,
-        amount: '185K',
-        subTitle: 'Contract Vendor',
-        color: 'info'
-      },
-      {
-        size: 70,
-        amount: '375K',
-        subTitle: 'Licenses',
-        color: 'primary'
-      },
-      {
-        size: 60,
-        amount: '742K',
-        subTitle: 'Assets',
-        color: 'info'
-      }
-    ])
-    onMounted(() => {
-      AOS.init({
-        disable: function () {
-          var maxWidth = 996
-          return window.innerWidth < maxWidth
-        },
-        once: true,
-        duration: 800
-      })
-    })
-    return { modules, grossSaleChart, earningChart, conversionChart, swiperItems }
-  }
-}
+      once: true,
+      duration: 800,
+    });
+  },
+};
 </script>

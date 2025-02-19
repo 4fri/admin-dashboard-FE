@@ -47,6 +47,7 @@
           <side-menu isTag="router-link" title="User Profile" icon="circle" :icon-size="10" icon-type="solid" miniTitle="UP" :route="{ to: 'default.user-profile' }"></side-menu>
           <!-- <side-menu isTag="router-link" title="User Add" icon="circle" :icon-size="10" icon-type="solid" miniTitle="UA" :route="{ to: 'default.user-add' }"></side-menu> -->
           <side-menu isTag="router-link" title="User List" icon="circle" :icon-size="10" icon-type="solid" miniTitle="UL" :route="{ to: 'default.user-list' }"></side-menu>
+          <side-menu isTag="router-link" title="Menu List" icon="circle" :icon-size="10" icon-type="solid" miniTitle="UL" :route="{ to: 'default.menu-list' }"></side-menu>
           <side-menu isTag="router-link" title="Role" icon="circle" :icon-size="10" icon-type="solid" miniTitle="RL" :route="{ to: 'default.admin-permissions' }"></side-menu>
           <!-- <side-menu isTag="router-link" title="Admin" icon="lock-open" :route="{ to: 'default.admin-permissions' }"></side-menu> -->
         </b-collapse>
