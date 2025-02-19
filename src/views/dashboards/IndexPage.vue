@@ -95,7 +95,7 @@ export default {
   methods: {
     async fetchData(){
       try {
-        const response = await api.get('/dashboard/summary-cards', {
+        const response = await api.get('/dashboard/count-summary-cards', {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${this.token}`,

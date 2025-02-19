@@ -111,6 +111,12 @@ const defaultChildRoutes = (prefix) => [
     component: () => import('@/views/user/ListPage.vue')
   },
   {
+    path: '/menu-list',
+    name: prefix + '.menu-list',
+    meta: { auth: true, name: 'Menu List', isBanner: true },
+    component: () => import('@/views/menu/ListPageMenu.vue')
+  },
+  {
     path: '/user-add',
     name: prefix + '.user-add',
     meta: { auth: true, name: 'User Add', isBanner: true },
