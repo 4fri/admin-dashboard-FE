@@ -8,7 +8,7 @@
             <h4 class="card-title">Menu List</h4>
           </div>
           <div class="header-title">
-            <a href="#" class="btn btn-primary" title="User Add" @click.prevent="navigateToRoute('default.user-add')">User Add</a>
+            <a href="#" class="btn btn-primary" title="User Add" @click.prevent="navigateToRoute('default.route-add')">User Add</a>
           </div>
         </div>
 
@@ -53,10 +53,9 @@ export default {
       },
       columns: [
         { key: 'name', label: 'Name' },
-        { key: 'icon', label: 'Icon' },
-        { key: 'sort_order', label: 'Sort' },
-        { key: 'route', label: 'Route' },
-        { key: 'parent', label: 'Parent' },
+        { key: 'url', label: 'Icon' },
+        { key: 'method', label: 'Sort' },
+        { key: 'prefix', label: 'Route' }
       ],
       token: '',
       loading: true,
@@ -70,7 +69,7 @@ export default {
     async fetchData(page = 1) {
       this.loading = true;
       try {
-        const response = await api.get('/menus', {
+        const response = await api.get('/routes', {
           params: { page },
           headers: {
             'Content-Type': 'application/json',
@@ -78,13 +77,12 @@ export default {
           },
         });
 
-        this.tableData = response.data.result.data.map((menu) => ({
-          id: menu.id,
-          name: menu.name,
-          icon: menu.icon,
-            sort_order: menu.sort_order,
-            route: menu.route,
-            parent: menu.parent ? menu.parent.name : null
+        this.tableData = response.data.result.data.map((route) => ({
+          id: route.id,
+          name: route.name,
+          url: route.url,
+          method: route.method,
+          prefix: route.prefix
         }));
 
         this.pagination = {

@@ -1,14 +1,32 @@
 <template>
   <div class="card-body">
+    <!-- SEARCH AND DATA COUNT -->
+    <div class="d-flex justify-content-between mb-3">
+      <div>
+        <span>Showing {{ rows.length }} entries</span>
+      </div>
+      <div class="d-flex">
+        <input type="text" class="form-control me-2" placeholder="Search..." />
+        <select v-model="selectedData" class="form-select" @change="displayData($event.target.value)">
+          <option value="">Choose Data</option>
+          <option value="customer">Customer</option>
+          <option value="contract">Contract Vendor</option>
+          <option value="license">Licenses</option>
+          <option value="asset">Assets</option>
+        </select>
+      </div>
+    </div>
+    
     <div class="table-responsive">
       <table id="user-list-table" class="table table-striped" role="grid" data-toggle="data-table">
         <thead>
           <tr>
             <th>No</th>
             <th v-for="(column, index) in columns" :key="index">
+              <input type="text" class="form-control mt-1" placeholder="Filter..." v-if="filterColumns === true" />
               {{ column.label }}
             </th>
-            <th v-if="buttonEdit.visible === true || buttonDelete.visible === true" class="text-center">Action</th>
+            <th v-if="buttonEdit.visible || buttonDelete.visible" class="text-center">Action</th>
           </tr>
         </thead>
         <tbody>
@@ -17,7 +35,7 @@
             <td v-for="(column, colIndex) in columns" :key="colIndex">
               {{ row[column.key] }}
             </td>
-            <td v-if="buttonEdit.visible === true || buttonDelete.visible === true" class="text-center">
+            <td v-if="buttonEdit.visible || buttonDelete.visible" class="text-center">
               <div class="d-flex justify-content-center">
                 <a
                   class="btn btn-sm btn-icon btn-warning mx-1"
@@ -52,8 +70,8 @@
               </div>
             </td>
           </tr>
-          <tr v-if="rows && rows.length === 0 || !rows">
-            <td :colspan="columns ? columns.length + 2 : 1" class="text-center">No data available</td>
+          <tr v-if="!rows || rows.length === 0">
+            <td :colspan="columns.length + 2" class="text-center">No data available</td>
           </tr>
         </tbody>
       </table>
@@ -96,10 +114,12 @@ export default {
     rows: {
       type: Array,
       required: true,
+      default: () => [],
     },
     columns: {
       type: Array,
       required: true,
+      default: () => [],
     },
     buttonEdit: {
       type: Object,
@@ -119,6 +139,16 @@ export default {
       type: Object,
       required: true,
     },
+    filterColumns: {
+      type: Boolean,
+      default: false,
+    }
+  },
+
+  data() {
+    return {
+      selectedData: '',
+    };
   },
 
   methods: {
@@ -133,6 +163,10 @@ export default {
         this.$emit('page-changed', page);
       }
     },
-  },
+    displayData(type) {
+      console.log(this.selectedData);
+      this.$emit('displayData', type);
+    }
+  }
 };
 </script>
