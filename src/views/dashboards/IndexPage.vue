@@ -50,7 +50,9 @@
         </div>
       </div>
       <!-- Include the table component here -->
-      <table-component data-aos="fade-up" data-aos-delay="800" />
+      <table-component 
+      data-aos="fade-up" 
+      data-aos-delay="800" />
     </div>
   </div>
 </template>

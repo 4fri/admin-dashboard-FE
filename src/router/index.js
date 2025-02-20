@@ -117,10 +117,22 @@ const defaultChildRoutes = (prefix) => [
     component: () => import('@/views/menu/ListPageMenu.vue')
   },
   {
+    path: '/route-list',
+    name: prefix + '.route-list',
+    meta: { auth: true, name: 'Route List', isBanner: true },
+    component: () => import('@/views/menu/ListPageRoute.vue')
+  },
+  {
     path: '/user-add',
     name: prefix + '.user-add',
     meta: { auth: true, name: 'User Add', isBanner: true },
     component: () => import('@/views/user/AddPage.vue')
+  },
+  {
+    path: '/route-add',
+    name: prefix + '.route-add',
+    meta: { auth: true, name: 'Route Add', isBanner: true },
+    component: () => import('@/views/menu/AddRoutePage.vue')
   },
   {
     path: '/user-profile',

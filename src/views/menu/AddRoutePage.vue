@@ -4,7 +4,7 @@
       <b-card>
         <b-card-header class="d-flex justify-content-between">
           <div class="header-title">
-            <h4 class="card-title">Add New User</h4>
+            <h4 class="card-title">Add New Routes</h4>
           </div>
         </b-card-header>
         <b-card-body>
@@ -112,21 +112,20 @@ export default {
     }
   },
   created() {
-    this.token = localStorage.getItem('access_token');
+    this.token =  localStorage.getItem('access_token');
   },
   methods: {
     async fetchRoles() {
-      console.log(this.token);
       this.loadingRoles = true;
       try {
         const response = await api.get('/roles', {
           headers: {
             'Content-Type': 'application/json',
-            Authorization : `Bearer ${this.token}`
+            'Authorization': `Bearer ${this.$token}`
           }
         });
         if (response.data.success) {
-          this.roles = response.data.result.roles.map(role => ({
+          this.roles = response.data.result.data.map(role => ({
             id: role.id,
             name: role.name
           }));
