@@ -129,6 +129,12 @@ const defaultChildRoutes = (prefix) => [
     component: () => import('@/views/user/AddPage.vue')
   },
   {
+    path: '/user-edit/:id',
+    name: 'default.user-edit',
+    meta: { auth: true, name: 'User Edit', isBanner: true },
+    component: () => import('@/views/user/EditUser.vue')
+  },
+  {
     path: '/route-add',
     name: prefix + '.route-add',
     meta: { auth: true, name: 'Route Add', isBanner: true },
@@ -278,7 +284,7 @@ const landingPageRoutes = (prefix) => [
     name: prefix + 'landing-page',
     meta: { auth: true, name: 'Landing Page', isBanner: true, header: 'header_two', footer: 'footer' },
     component: () => import('@/views/modules/landing-pages/LandingPage.vue')
-  },
+  }
 ]
 
 const routes = [

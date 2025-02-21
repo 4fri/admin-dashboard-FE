@@ -30,7 +30,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(row, rowIndex) in rows" :key="rowIndex">
+          <tr v-for="(row, rowIndex) in rows" :key="rowIndex" :class="getRowClass(row.days_remaining)">
             <td>{{ rowIndex + 1 }}</td>
             <td v-for="(column, colIndex) in columns" :key="colIndex">
               {{ row[column.key] }}
@@ -166,7 +166,23 @@ export default {
     displayData(type) {
       console.log(this.selectedData);
       this.$emit('displayData', type);
-    }
+    },
+    getRowClass(daysRemaining) {
+      const maxDays = 60;
+      const oneThird = (maxDays / 3);
+      const twoThirds = (maxDays / 3) * 2;
+
+      if (daysRemaining <= oneThird) return "table-danger";
+      if (daysRemaining <= twoThirds) return "table-orange";
+      if (daysRemaining <= maxDays) return "table-warning";
+      return "";
+    },
   }
 };
 </script>
+
+<style>
+.table-orange {
+  background-color: #ffd191; /* Warna oranye */
+}
+</style>

@@ -51,7 +51,7 @@
           :pagination="pagination"
           @page-changed="changePage"
           @delete="deleteRow"
-          @edit="openNewPermissionModal"
+          @edit="navigateToEditUser"
         />
       </div>
     </b-col>
@@ -162,6 +162,13 @@ export default {
     },
     navigateToRoute(routeName) {
       this.$router.push({ name: routeName });
+    },
+    navigateToEditUser(userId) {
+      if (userId) {
+        this.$router.push({ name: 'default.user-edit', params: { id: userId } });
+      } else {
+        console.error('Error: userId is undefined or null');
+      }
     },
   },
 };

@@ -31,8 +31,11 @@
               <b-form-invalid-feedback>Password tidak boleh kosong.</b-form-invalid-feedback>
             </b-form-group>
 
-            <b-button type="submit" variant="primary" class="w-100">Login</b-button>
+            <b-form-group>
+              <b-form-checkbox v-model="rememberPassword">Remember Me</b-form-checkbox>
+            </b-form-group>
 
+            <b-button type="submit" variant="primary" class="w-100">Login</b-button>
             <div v-if="errorMessage" class="text-danger text-center mt-2">{{ errorMessage }}</div>
           </b-form>
         </b-card>
@@ -42,48 +45,64 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
-import { useRouter } from "vue-router"; // Impor useRouter
-import api from "@/plugins/axios"; // Import axios dari file yang sudah kita buat
+  import { ref, computed, onMounted } from "vue";
+  import { useRouter } from "vue-router"; // Impor useRouter
+  import api from "@/plugins/axios"; // Import axios dari file yang sudah kita buat
 
-const router = useRouter(); // Inisialisasi router
+  const router = useRouter(); // Inisialisasi router
 
-const email = ref('');
-const password = ref('');
-const errorMessage = ref('');
+  const email = ref('');
+  const password = ref('');
+  const errorMessage = ref('');
+  const rememberPassword = ref(false);
 
-const emailState = computed(() => {
-  return email.value.length > 0 ? true : null;
-});
-
-const passwordState = computed(() => {
-  return password.value.length > 0 ? true : null;
-});
-
-const handleLogin = async () => {
-  errorMessage.value = ''; // Reset error message
-  try {
-    const response = await api.post('/login', {
-      email: email.value,
-      password: password.value
-    });
-
-    if (response.status !== 200) {
-      throw new Error('Login gagal. Periksa email dan password Anda.');
+  // Cek apakah ada email yang disimpan di local storage
+  onMounted(() => {
+    const savedEmail = localStorage.getItem('rememberedEmail');
+    if (savedEmail) {
+      email.value = savedEmail;
+      rememberPassword.value = true;
     }
+  });
 
-    const data = response.data;
-    const expirationTime = Date.now() + 90000 * 1000; // 90.000 detik = 25 jam
-    // Simpan token atau data pengguna sesuai kebutuhan
-    localStorage.setItem('access_token', data.access_token); // Simpan token di localStorage
-    localStorage.setItem('user', JSON.stringify(data.result)); // Simpan data user di localStorage
-    localStorage.setItem('expiry_time', expirationTime);
-    // Redirect ke halaman landingPage
-    router.push({ path: '/landingPage' });
-  } catch (error) {
-    errorMessage.value = error.message;
-  }
-};
+  const emailState = computed(() => {
+    return email.value.length > 0 ? true : null;
+  });
+
+  const passwordState = computed(() => {
+    return password.value.length > 0 ? true : null;
+  });
+
+  const handleLogin = async () => {
+    errorMessage.value = ''; // Reset error message
+    try {
+      const response = await api.post('/login', {
+        email: email.value,
+        password: password.value
+      });
+
+      if (response.status !== 200) {
+        throw new Error('Login gagal. Periksa email dan password Anda.');
+      }
+
+      const data = response.data;
+      const expirationTime = Date.now() + 90000 * 1000; // 90.000 detik = 25 jam
+      // Simpan token atau data pengguna sesuai kebutuhan
+      localStorage.setItem('access_token', data.access_token); // Simpan token di localStorage
+      localStorage.setItem('user', JSON.stringify(data.result)); // Simpan data user di localStorage
+      localStorage.setItem('expiry_time', expirationTime);
+      // Simpan email jika rememberPassword dicentang
+      if (rememberPassword.value) {
+        localStorage.setItem('rememberedEmail', email.value);
+      } else {
+        localStorage.removeItem('rememberedEmail');
+      }
+      // Redirect ke halaman landingPage
+      router.push({ path: '/landingPage' });
+    } catch (error) {
+      errorMessage.value = error.message;
+    }
+  };
 </script>
 
 <style lang="scss" scoped>

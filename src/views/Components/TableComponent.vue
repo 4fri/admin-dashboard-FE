@@ -6,17 +6,27 @@
             <!-- Nav Pills -->
           <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
             <li class="nav-item" role="presentation">
-              <button class="nav-link text-dark active" id="pills-allData-tab" data-bs-toggle="pill" data-bs-target="#pills-allData" type="button" role="tab" aria-controls="pills-allData" aria-selected="false">Data</button>
+              <button class="nav-link text-dark active" id="pills-chart-tab" data-bs-toggle="pill" data-bs-target="#pills-chart" type="button" role="tab" aria-controls="pills-chart" aria-selected="false">Chart</button>
             </li>
             <li class="nav-item" role="presentation">
-              <button class="nav-link text-dark" id="pills-chart-tab" data-bs-toggle="pill" data-bs-target="#pills-chart" type="button" role="tab" aria-controls="pills-chart" aria-selected="false">Chart</button>
+              <button class="nav-link text-dark" id="pills-allData-tab" data-bs-toggle="pill" data-bs-target="#pills-allData" type="button" role="tab" aria-controls="pills-allData" aria-selected="false">Data</button>
             </li>
           </ul>
         </div>
       </div>
       <div class="tab-content" id="pills-tabContent">
+        <!-- Charts -->
+        <div class="row tab-pane fade show active" id="pills-chart" role="tabpanel" aria-labelledby="pills-chart-tab">
+          <div class="col-lg-12">
+            <section class="card">
+              <div class="card-body">
+                <chart-dashboard />
+              </div>
+            </section>
+          </div>
+        </div> 
         <!-- All Data -->
-        <div class="row tab-pane fade show active" id="pills-allData" role="tabpanel" aria-labelledby="pills-allData-tab">
+        <div class="row tab-pane fade" id="pills-allData" role="tabpanel" aria-labelledby="pills-allData-tab">
           <div class="col-lg-12">
             <section class="card">
               <div class="card-body">
@@ -38,17 +48,7 @@
               </div>
             </section>
           </div>
-        </div>
-        <!-- Charts -->
-        <div class="row tab-pane fade" id="pills-chart" role="tabpanel" aria-labelledby="pills-chart-tab">
-          <div class="col-lg-12">
-            <section class="card">
-              <div class="card-body">
-                <chart-dashboard />
-              </div>
-            </section>
-          </div>
-        </div>  
+        </div> 
       </div>          
     </div>
   </div>
