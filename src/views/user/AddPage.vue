@@ -33,7 +33,7 @@
                 </div>
               </div>
 
-                            <!-- User Role (vue-multiselect with axios) -->
+              <!-- User Role (vue-multiselect with axios) -->
               <div class="col-md-6">
                 <div class="form-group">
                   <label class="form-label">User Role</label>
@@ -69,12 +69,11 @@
                   <small v-if="passwordMismatch" class="text-danger">Passwords do not match</small>
                 </div>
               </div>
-
-
             </div>
-
-            <!-- Submit Button -->
-            <button type="submit" class="btn btn-primary" :disabled="passwordMismatch">Add New User</button>
+            <div class="d-grid gap-2 d-md-flex pt-2">
+              <button type="button" class="btn btn-danger" @click="goBack">Back</button>
+              <button type="submit" class="btn btn-primary" :disabled="passwordMismatch">Add New User</button>
+            </div>
           </form>
         </b-card-body>
       </b-card>
@@ -159,7 +158,7 @@ export default {
         }, {
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${this.$token}`
+            Authorization: `Bearer ${this.token}`
           }
         });
 
@@ -179,6 +178,9 @@ export default {
           toast.error("An error occurred while adding the user."); // Pesan default jika tidak ada pesan error
         }
       }
+    },
+    goBack() {
+      this.$router.go(-1);
     },
   },
   mounted() {

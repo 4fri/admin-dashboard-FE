@@ -8,7 +8,7 @@
             <h4 class="card-title">Menu List</h4>
           </div>
           <div class="header-title">
-            <a href="#" class="btn btn-primary" title="User Add" @click.prevent="navigateToRoute('default.route-add')">User Add</a>
+            <a href="#" class="btn btn-primary" title="Menu Add" @click.prevent="navigateToRoute('default.route-add')">Menu Add</a>
           </div>
         </div>
 
@@ -22,12 +22,12 @@
           v-if="!loading"
           :rows="tableData" 
           :columns="columns"
-          :buttonEdit="{ visible: false, disable: false }"
-          :buttonDelete="{ visible: false, disable: false }"
+          :buttonEdit="{ visible: true, disable: false }"
+          :buttonDelete="{ visible: true, disable: false }"
           :pagination="pagination"
           @page-changed="changePage"
           @delete="deleteRow"
-          @edit="openNewPermissionModal"
+          @edit="editRoute"
         />
       </div>
     </b-col>
@@ -36,7 +36,6 @@
 <script>
 import TableWidget from '@/components/widgets/users/TableData.vue';
 import api from '@/plugins/axios';
-import { Modal } from 'bootstrap';
 
 export default {
   components: {
@@ -53,9 +52,11 @@ export default {
       },
       columns: [
         { key: 'name', label: 'Name' },
-        { key: 'url', label: 'Icon' },
-        { key: 'method', label: 'Sort' },
-        { key: 'prefix', label: 'Route' }
+        { key: 'method', label: 'Method' },
+        { key: 'prefix', label: 'Prefix' },
+        { key: 'url', label: 'URL' },
+        { key: 'controller', label: 'Controller' },
+        { key: 'function', label: 'Function' },
       ],
       token: '',
       loading: true,
@@ -82,7 +83,9 @@ export default {
           name: route.name,
           url: route.url,
           method: route.method,
-          prefix: route.prefix
+          prefix: route.prefix,
+          controller: route.controller,
+          function: route.function
         }));
 
         this.pagination = {
@@ -97,11 +100,13 @@ export default {
         this.loading = false;
       }
     },
+
     changePage(page) {
       if (page >= 1 && page <= this.pagination.last_page) {
         this.fetchData(page);
       }
     },
+
     deleteRow(id) {
       this.$swal
         .fire({
@@ -116,7 +121,7 @@ export default {
         .then((result) => {
           if (result.isConfirmed) {
             api
-              .delete(`/users/${id}/destroy`, {
+              .delete(`/routes/${id}/destroy`, {
                 headers: {
                   'Content-Type': 'application/json',
                   Authorization: `Bearer ${this.token}`,
@@ -133,13 +138,28 @@ export default {
           }
         });
     },
-    openNewPermissionModal() {
-      const modalElement = this.$refs.newPermissionModal;
-      const modalInstance = new Modal(modalElement);
-      modalInstance.show();
+    
+    // navigateToRoute(routeName) {
+    //   this.$router.push({ name: routeName });
+    // },
+
+    // editRoute(route) {
+    //   // Ensure that the route ID is correctly passed
+    //   const id = route.id;
+    //   this.navigateToRoute('prefix.route-edit', { id });
+    // },
+    editRoute(route) {
+      // Pastikan bahwa route dan route.id valid sebelum mengaksesnya
+      if (route && route.id) {
+        const routeId = route.id; // Ambil ID dari route yang ingin diedit
+        this.navigateToRoute('prefix.route-edit', { id: routeId }); // Navigasi dengan mengirimkan ID
+      } else {
+        // Tampilkan pesan error jika route tidak ditemukan atau id tidak valid
+        this.$toast.error("Data route tidak valid atau ID tidak ditemukan.");
+      }
     },
-    navigateToRoute(routeName) {
-      this.$router.push({ name: routeName });
+    navigateToRoute(routeName, params = {}) {
+      this.$router.push({ name: routeName, params }); // Navigasi ke rute dengan nama dan parameter
     },
   },
 };

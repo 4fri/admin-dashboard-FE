@@ -174,7 +174,7 @@
               <li><router-link class="dropdown-item" :to="{ name: 'default.user-profile' }">Profile</router-link></li>
               <li><router-link class="dropdown-item" :to="{ name: 'default.user-privacy-setting' }">Privacy Setting</router-link></li>
               <li><hr class="dropdown-divider" /></li>
-              <li><router-link class="dropdown-item" :to="{ name: 'auth.login' }">Logout</router-link></li>
+              <li><a class="dropdown-item" @click="logout">Logout</a></li>
             </ul>
           </li>
         </ul>
@@ -183,8 +183,10 @@
   </nav>
 </template>
 <script>
-import { computed, ref, onMounted, onUnmounted } from 'vue'
-import { useStore } from 'vuex'
+// import { useStore } from 'vuex'
+import api from "@/plugins/axios";
+import { useToast } from "vue-toastification";
+
 export default {
   components: {},
   props: {
@@ -197,12 +199,21 @@ export default {
       default: false
     }
   },
-  setup(props, { emit }) {
-    const store = useStore()
-    const headerNavbar = computed(() => store.getters['setting/header_navbar'])
-    const isHidden = ref(false)
-
-    const onscroll = () => {
+  data() {
+    return {
+      isHidden: false
+    }
+  },
+  computed: {
+    headerNavbar() {
+      return this.$store.getters['setting/header_navbar']
+    },
+    carts() {
+      return this.$store.getters.carts
+    }
+  },
+  methods: {
+    onscroll() {
       const yOffset = document.documentElement.scrollTop
       const navbar = document.querySelector('.navs-sticky')
       if (navbar !== null) {
@@ -212,23 +223,64 @@ export default {
           navbar.classList.remove('menu-sticky')
         }
       }
+    },
+    async logout() {
+      const toast = useToast();
+      try {
+        // Check if token exists in localStorage or sessionStorage
+        const token = localStorage.getItem('access_token') || sessionStorage.getItem('access_token');
+        // console.log('test');
+        
+        if (!token) {
+          toast.error("No active session found.");
+          return;
+        }
+
+        // Send the logout request with the Authorization header containing the token
+        const response = await api.post('/logout', {}, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`, // Use token from localStorage or sessionStorage
+          }
+        });
+
+        if (response.data && response.data.message === "Successfully logged out") {
+          // Notify user about success
+          toast.success("Logged out successfully!");
+
+          // Clear session or token from localStorage and sessionStorage
+          localStorage.removeItem('access_token');
+          sessionStorage.removeItem('access_token');
+
+          // Optionally clear Vuex state if needed
+          this.$store.commit('CLEAR_USER_DATA');  // Clear user data from Vuex
+
+          // Redirect to login page or another page
+          this.$router.push({ name: 'auth.login' });
+        } else {
+          toast.error("Failed to log out.");
+        }
+      } catch (error) {
+        console.error("Error during logout:", error);
+        // Show a user-friendly error message if there's an issue with the logout API call
+        if (error.response && error.response.data && error.response.data.message) {
+          toast.error(error.response.data.message);
+        } else {
+          toast.error("An error occurred during logout.");
+        }
+
+        // Clean up if necessary, like removing token and redirecting
+        localStorage.removeItem('access_token');
+        sessionStorage.removeItem('access_token');
+        this.$router.push({ name: 'auth.login' });
+      }
     }
-
-    const carts = computed(() => store.getters.carts)
-
-    onMounted(() => {
-      window.addEventListener('scroll', onscroll())
-    })
-
-    onUnmounted(() => {
-      window.removeEventListener('scroll', onscroll())
-    })
-    return {
-      headerNavbar,
-      isHidden,
-      carts,
-      emit
-    }
-  }
+  },
+  mounted() {
+    window.addEventListener('scroll', this.onscroll)
+  },
+  // beforeDestroy() {
+  //   window.removeEventListener('scroll', this.onscroll)
+  // }
 }
 </script>

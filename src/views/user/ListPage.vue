@@ -17,30 +17,6 @@
           <div v-for="n in 5" :key="n" class="skeleton-row"></div>
         </div>
 
-        <!-- New Permission Modal -->
-        <div class="modal fade" id="new-permission" ref="newPermissionModal"
-             data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-             aria-labelledby="staticBackdropPermissionLabel" aria-hidden="true">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="staticBackdropPermissionLabel">Add Permission</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                <div class="form-group">
-                  <label class="form-label">Permission title</label>
-                  <input type="text" class="form-control" placeholder="Permission Title" />
-                </div>
-                <div class="text-start">
-                  <button type="button" class="btn btn-primary me-2" data-bs-dismiss="modal">Save</button>
-                  <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
         <!-- Table Widget -->
         <TableWidget 
           v-if="!loading"
@@ -51,7 +27,7 @@
           :pagination="pagination"
           @page-changed="changePage"
           @delete="deleteRow"
-          @edit="navigateToEditUser"
+          @edit="editUser"
         />
       </div>
     </b-col>
@@ -60,7 +36,6 @@
 <script>
 import TableWidget from '@/components/widgets/users/TableWidgetUsers.vue';
 import api from '@/plugins/axios';
-import { Modal } from 'bootstrap';
 
 export default {
   components: {
@@ -119,11 +94,13 @@ export default {
         this.loading = false;
       }
     },
+
     changePage(page) {
       if (page >= 1 && page <= this.pagination.last_page) {
         this.fetchData(page);
       }
     },
+
     deleteRow(id) {
       this.$swal
         .fire({
@@ -155,20 +132,22 @@ export default {
           }
         });
     },
-    openNewPermissionModal() {
-      const modalElement = this.$refs.newPermissionModal;
-      const modalInstance = new Modal(modalElement);
-      modalInstance.show();
-    },
-    navigateToRoute(routeName) {
-      this.$router.push({ name: routeName });
-    },
-    navigateToEditUser(userId) {
-      if (userId) {
-        this.$router.push({ name: 'default.user-edit', params: { id: userId } });
+
+    // navigateToRoute(routeName) {
+    //   this.$router.push({ name: routeName });
+    // },
+
+    editUser(user) {
+      if (user && user.id) {
+        const userId = user.id;
+        this.navigateToRoute('prefix.user-edit', { id: userId });
+        // this.$router.push({ name: 'prefix.user-edit', params: { id: userId } });
       } else {
         console.error('Error: userId is undefined or null');
       }
+    },
+    navigateToRoute(routeName, params = {}) {
+      this.$router.push({ name: routeName, params }); // Navigasi ke rute dengan nama dan parameter
     },
   },
 };

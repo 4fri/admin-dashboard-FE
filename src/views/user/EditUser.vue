@@ -4,17 +4,17 @@
       <b-card>
         <b-card-header class="d-flex justify-content-between">
           <div class="header-title">
-            <h4 class="card-title">{{ isEditing ? 'Edit User' : 'Add New User' }}</h4>
+            <h4 class="card-title">Edit User</h4>
           </div>
         </b-card-header>
         <b-card-body>
-          <form @submit.prevent="submitForm">
+          <form @submit.prevent="updateForm">
             <div class="row g-3">
               <!-- Fullname -->
               <div class="col-md-6">
                 <div class="form-group">
                   <label class="form-label" for="name">Fullname</label>
-                  <input v-model="form.name" type="text" class="form-control" id="name" placeholder="Name" required />
+                  <input v-model="form.fullname" type="text" class="form-control" id="fullname" placeholder="Name" required />
                 </div>
               </div>
               <!-- Username -->
@@ -48,8 +48,10 @@
                     label="name"
                     track-by="id"
                     class="form-control"
+                    id="roles"
                   />
                   <small v-if="loadingRoles" class="text-muted">Loading roles...</small>
+                  <small v-else-if="roles.length === 0" class="text-warning">No roles available.</small>
                 </div>
               </div>
 
@@ -57,7 +59,7 @@
               <div class="col-md-6">
                 <div class="form-group">
                   <label class="form-label" for="password">Password</label>
-                  <input v-model="form.password" type="password" class="form-control" id="password" placeholder="Password" :required="!isEditing" />
+                  <input v-model="form.password" type="password" class="form-control" id="password" placeholder="Password" />
                 </div>
               </div>
 
@@ -65,15 +67,15 @@
               <div class="col-md-6">
                 <div class="form-group">
                   <label class="form-label" for="rpass">Repeat Password</label>
-                  <input v-model="form.password_confirmation" type="password" class="form-control" id="rpass" placeholder="Repeat Password" :required="!isEditing" />
+                  <input v-model="form.password_confirmation" type="password" class="form-control" id="rpass" placeholder="Repeat Password" />
                   <small v-if="passwordMismatch" class="text-danger">Passwords do not match</small>
                 </div>
               </div>
-
             </div>
-
-            <!-- Submit Button -->
-            <button type="submit" class="btn btn-primary" :disabled="passwordMismatch">{{ isEditing ? 'Update User' : 'Add New User' }}</button>
+            <div class="d-grid gap-2 d-md-flex pt-2">
+              <button type="button" class="btn btn-danger" @click="goBack">Back</button>
+              <button type="submit" class="btn btn-primary" :disabled="passwordMismatch">Update User</button>
+            </div>
           </form>
         </b-card-body>
       </b-card>
@@ -94,7 +96,7 @@ export default {
     return {
       form: {
         id: null,
-        name: "",
+        fullname: "",
         username: "",
         email: "",
         password: "",
@@ -104,7 +106,6 @@ export default {
       roles: [],
       loadingRoles: false,
       token: '',
-      isEditing: false,
     };
   },
   computed: {
@@ -116,13 +117,11 @@ export default {
     this.token = localStorage.getItem('access_token');
     const userId = this.$route.params.id;
     if (userId) {
-      this.isEditing = true;
       this.fetchUser(userId);
     }
   },
   methods: {
     async fetchRoles() {
-      console.log(this.token);
       this.loadingRoles = true;
       try {
         const response = await api.get('/roles', {
@@ -143,44 +142,37 @@ export default {
         this.loadingRoles = false;
       }
     },
+
     async fetchUser(userId) {
       try {
-        const response = await api.get(`/users/${userId}`, {
+        const response = await api.get(`/users/${userId}/show`, {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${this.token}`
           }
         });
-        if (response.data.success) {
-          const user = response.data.result.user;
-          this.form.id = user.id;
-          this.form.name = user.fullname;
+
+        if (response.data.success && response.data.result) {
+          const user = response.data.result;
+          this.form.id = user.id; 
+          this.form.fullname = user.fullname;
           this.form.username = user.username;
           this.form.email = user.email;
-          this.form.roles = this.roles.filter(role => user.roles.includes(role.id));
+          this.form.roles = user.roles.map(role => ({
+            id: role.id,
+            name: role.name
+          }))
         }
       } catch (error) {
         console.error("Error fetching user:", error);
       }
     },
-    submitForm() {
-      if (this.passwordMismatch) {
-        const toast = useToast(); // Gunakan toast
-        toast.error("Passwords do not match!"); // Tampilkan notifikasi error
-        return;
-      }
-      if (this.isEditing) {
-        this.updateUser();
-      } else {
-        this.createUser();
-      }
-    },
-    async createUser() {
-      const toast = useToast(); // Gunakan toast
-
+    
+    async updateForm() {
+      const toast = useToast();
       try {
-        const response = await api.post('/users/store', {
-          fullname: this.form.name,
+        const response = await api.put(`/users/${this.form.id}/update`, {
+          fullname: this.form.fullname,
           username: this.form.username,
           email: this.form.email,
           password: this.form.password,
@@ -194,56 +186,23 @@ export default {
         });
 
         if (response.data.success) {
-          this.$router.push('/user-list'); // Redirect ke halaman user list
-          toast.success("User successfully added!"); // Tampilkan notifikasi sukses
+          this.$router.push('/user-list'); 
+          toast.success("User successfully updated!"); 
         } else {
-          // Tampilkan pesan error dari response API
-          toast.error(response.data.message || "Failed to add user."); // Jika message tidak ada, gunakan pesan default
-        }
-      } catch (error) {
-        console.error("Error adding user:", error);
-        // Tampilkan pesan error dari response API jika ada
-        if (error.response && error.response.data && error.response.data.message) {
-          toast.error(error.response.data.message); // Ambil pesan error dari response
-        } else {
-          toast.error("An error occurred while adding the user."); // Pesan default jika tidak ada pesan error
-        }
-      }
-    },
-    async updateUser() {
-      const toast = useToast(); // Gunakan toast
-
-      try {
-        const response = await api.put(`/users/${this.form.id}`, {
-          fullname: this.form.name,
-          username: this.form.username,
-          email: this.form.email,
-          password: this.form.password,
-          password_confirmation: this.form.password_confirmation,
-          roles: this.form.roles.map(role => role.id)
-        }, {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${this.token}`
-          }
-        });
-
-        if (response.data.success) {
-          this.$router.push('/user-list'); // Redirect ke halaman user list
-          toast.success("User successfully updated!"); // Tampilkan notifikasi sukses
-        } else {
-          // Tampilkan pesan error dari response API
-          toast.error(response.data.message || "Failed to update user."); // Jika message tidak ada, gunakan pesan default
+          toast.error(response.data.message || "Failed to update user."); 
         }
       } catch (error) {
         console.error("Error updating user:", error);
-        // Tampilkan pesan error dari response API jika ada
         if (error.response && error.response.data && error.response.data.message) {
-          toast.error(error.response.data.message); // Ambil pesan error dari response
+          toast.error(error.response.data.message); 
         } else {
-          toast.error("An error occurred while updating the user."); // Pesan default jika tidak ada pesan error
+          toast.error("An error occurred while updating the user."); 
         }
       }
+    },
+
+    goBack() {
+      this.$router.go(-1);
     },
   },
   mounted() {

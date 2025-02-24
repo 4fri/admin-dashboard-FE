@@ -10,71 +10,53 @@
         <b-card-body>
           <form @submit.prevent="submitForm">
             <div class="row g-3">
-              <!-- Fullname -->
+              
               <div class="col-md-6">
                 <div class="form-group">
-                  <label class="form-label" for="name">Fullname</label>
+                  <label class="form-label" for="name">Name</label>
                   <input v-model="form.name" type="text" class="form-control" id="name" placeholder="Name" required />
                 </div>
               </div>
-              <!-- Fullname -->
+
               <div class="col-md-6">
                 <div class="form-group">
-                  <label class="form-label" for="username">Username</label>
-                  <input v-model="form.username" type="text" class="form-control" id="username" placeholder="Username" required />
+                  <label class="form-label" for="username">Method</label>
+                  <input v-model="form.method" type="text" class="form-control" id="method" placeholder="Method" required />
                 </div>
               </div>
 
-              <!-- Email -->
               <div class="col-md-6">
                 <div class="form-group">
-                  <label class="form-label" for="email">Email</label>
-                  <input v-model="form.email" type="email" class="form-control" id="email" placeholder="Email" required />
+                  <label class="form-label" for="text">Prefix</label>
+                  <input v-model="form.prefix" type="text" class="form-control" id="prefix" placeholder="Prefix" required />
                 </div>
               </div>
 
-                            <!-- User Role (vue-multiselect with axios) -->
               <div class="col-md-6">
                 <div class="form-group">
-                  <label class="form-label">User Role</label>
-                  <multiselect 
-                    v-model="form.roles" 
-                    :options="roles" 
-                    :multiple="true" 
-                    :close-on-select="false" 
-                    :clear-on-select="false" 
-                    :preserve-search="true"
-                    placeholder="Select roles"
-                    label="name"
-                    track-by="id"
-                    class="form-control"
-                  />
-                  <small v-if="loadingRoles" class="text-muted">Loading roles...</small>
+                  <label class="form-label" for="email">URL</label>
+                  <input v-model="form.url" type="text" class="form-control" id="url" placeholder="URL" required />
                 </div>
               </div>
 
-              <!-- Password -->
               <div class="col-md-6">
                 <div class="form-group">
-                  <label class="form-label" for="password">Password</label>
-                  <input v-model="form.password" type="password" class="form-control" id="password" placeholder="Password" required />
+                  <label class="form-label" for="email">Controller</label>
+                  <input v-model="form.controller" type="text" class="form-control" id="controller" placeholder="Controller" required />
                 </div>
               </div>
 
-              <!-- Repeat Password -->
               <div class="col-md-6">
                 <div class="form-group">
-                  <label class="form-label" for="rpass">Repeat Password</label>
-                  <input v-model="form.password_confirmation" type="password" class="form-control" id="rpass" placeholder="Repeat Password" required />
-                  <small v-if="passwordMismatch" class="text-danger">Passwords do not match</small>
+                  <label class="form-label" for="email">Function</label>
+                  <input v-model="form.function" type="text" class="form-control" id="function" placeholder="Function" required />
                 </div>
               </div>
-
-
             </div>
-
-            <!-- Submit Button -->
-            <button type="submit" class="btn btn-primary" :disabled="passwordMismatch">Add New User</button>
+            <div class="d-grid gap-2 d-md-flex pt-2">
+              <button type="button" class="btn btn-danger" @click="goBack">Back</button>
+              <button type="submit" class="btn btn-primary" :disabled="passwordMismatch">Add New Routes</button>
+            </div>
           </form>
         </b-card-body>
       </b-card>
@@ -84,25 +66,20 @@
 
 <script>
 import api from "@/plugins/axios";
-import Multiselect from "vue-multiselect";
 import { useToast } from "vue-toastification"; // Impor useToast
 
 export default {
-  components: {
-    Multiselect
-  },
   data() {
     return {
       form: {
         name: "",
-        username: "",
-        email: "",
-        password: "",
-        password_confirmation: "",
-        roles: []
+        method: "",
+        prefix: "",
+        url: "",
+        controller: "",
+        function: ""
       },
-      roles: [],
-      loadingRoles: false,
+      loadingRoutes: false,
       token: '',
     };
   },
@@ -116,7 +93,7 @@ export default {
   },
   methods: {
     async fetchRoles() {
-      this.loadingRoles = true;
+      this.loadingRoutes = true;
       try {
         const response = await api.get('/roles', {
           headers: {
@@ -133,7 +110,7 @@ export default {
       } catch (error) {
         console.error("Error fetching roles:", error);
       } finally {
-        this.loadingRoles = false;
+        this.loadingRoutes = false;
       }
     },
     submitForm() {
@@ -142,29 +119,31 @@ export default {
         toast.error("Passwords do not match!"); // Tampilkan notifikasi error
         return;
       }
-      this.createUser();
+      this.createRoutes();
     },
-    async createUser() {
+    async createRoutes() {
       const toast = useToast(); // Gunakan toast
 
       try {
-        const response = await api.post('/users/store', {
-          fullname: this.form.name,
-          username: this.form.username,
-          email: this.form.email,
-          password: this.form.password,
-          password_confirmation: this.form.password_confirmation,
-          roles: this.form.roles.map(role => role.id)
+        const response = await api.post('/routes/store', {
+          name: this.form.name,
+          method: this.form.method,
+          prefix: this.form.prefix,
+          url: this.form.url,
+          controller: this.form.controller,
+          function: this.form.controller,
         }, {
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${this.$token}`
+            Authorization: `Bearer ${this.token}`
           }
         });
 
         if (response.data.success) {
-          this.$router.push('/user-list'); // Redirect ke halaman user list
-          toast.success("User successfully added!"); // Tampilkan notifikasi sukses
+          console.log(response.data.success);
+          
+          this.$router.push('/route-list'); // Redirect ke halaman user list
+          toast.success("Routes successfully added!"); // Tampilkan notifikasi sukses
         } else {
           // Tampilkan pesan error dari response API
           toast.error(response.data.message || "Failed to add user."); // Jika message tidak ada, gunakan pesan default
@@ -178,6 +157,10 @@ export default {
           toast.error("An error occurred while adding the user."); // Pesan default jika tidak ada pesan error
         }
       }
+    },
+
+    goBack() {
+      this.$router.go(-1);
     },
   },
   mounted() {

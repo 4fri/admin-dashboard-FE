@@ -130,7 +130,7 @@ const defaultChildRoutes = (prefix) => [
   },
   {
     path: '/user-edit/:id',
-    name: 'default.user-edit',
+    name: 'prefix.user-edit',
     meta: { auth: true, name: 'User Edit', isBanner: true },
     component: () => import('@/views/user/EditUser.vue')
   },
@@ -139,6 +139,12 @@ const defaultChildRoutes = (prefix) => [
     name: prefix + '.route-add',
     meta: { auth: true, name: 'Route Add', isBanner: true },
     component: () => import('@/views/menu/AddRoutePage.vue')
+  },
+  {
+    path: '/route-edit/:id',
+    name: 'prefix.route-edit',
+    meta: { auth: true, name: 'Route Edit', isBanner: true },
+    component: () => import('@/views/menu/EditRoutePage.vue')
   },
   {
     path: '/user-profile',
