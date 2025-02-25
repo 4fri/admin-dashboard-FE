@@ -5,6 +5,7 @@
       <side-menu title="Home" :static-item="true"></side-menu>
       <side-menu isTag="router-link" title="Dashboard" icon="view-grid" :route="{ to: 'default.dashboard' }"></side-menu>
       <side-menu isTag="router-link" title="Alert" icon="view-grid" :route="{ to: 'default.alerting' }"></side-menu>
+      <side-menu isTag="router-link" title="Configuration Alert" icon="view-grid" :route="{ to: 'default.configuration-alert' }"></side-menu>
       <li><hr class="hr-horizontal" /></li>
       <side-menu title="User Management" :static-item="true"></side-menu>
       <side-menu title="Users" icon="user-group" toggle-id="users" :caret-icon="true" :route="{ popup: 'false', to: 'user' }" @onClick="toggle" :active="currentRoute.includes('user')">
