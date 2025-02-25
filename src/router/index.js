@@ -66,42 +66,23 @@ const defaultChildRoutes = (prefix) => [
     meta: { auth: true, name: 'Alerting Dashboard', isBanner: true },
     component: () => import('@/views/dashboards/AlertingDashboard.vue')
   },
-  // Spacial Pages
   {
-    path: '/billing',
-    name: prefix + '.billing',
-    meta: { auth: true, name: 'Billing', isBanner: true },
-    component: () => import('@/views/spacial-pages/BillingPage.vue')
+    path: '/configuration-alert',
+    name: prefix + '.configuration-alert',
+    meta: { auth: true, name: 'Configuration Alert', isBanner: true },
+    component: () => import('@/views/dashboards/ConfigurarionAlert.vue')
   },
   {
-    path: '/calender',
-    name: prefix + '.calender',
-    meta: { auth: true, name: 'Calender', isBanner: true },
-    component: () => import('@/views/spacial-pages/CalenderPage.vue')
+    path: '/alert-add',
+    name: prefix + '.alert-add',
+    meta: { auth: true, name: 'User Add', isBanner: true },
+    component: () => import('@/views/dashboards/AddConfigurationAlert.vue')
   },
   {
-    path: '/kanban',
-    name: prefix + '.kanban',
-    meta: { auth: true, name: 'Kanban', isBanner: true },
-    component: () => import('@/views/spacial-pages/KanbanPage.vue')
-  },
-  {
-    path: '/pricing',
-    name: prefix + '.pricing',
-    meta: { auth: true, name: 'Pricing', isBanner: true },
-    component: () => import('@/views/spacial-pages/PricingPage.vue')
-  },
-  {
-    path: '/timeline',
-    name: prefix + '.timeline',
-    meta: { auth: true, name: 'Timeline', isBanner: true },
-    component: () => import('@/views/spacial-pages/TimelinePage.vue')
-  },
-  {
-    path: '/rtl-support',
-    name: prefix + '.rtlsupport',
-    meta: { auth: true, name: 'RTL-Support', isBanner: true },
-    component: () => import('@/views/spacial-pages/RtlSupport.vue')
+    path: '/alert-edit/:id',
+    name: prefix + '.alert-edit',
+    meta: { auth: true, name: 'Alert Edit', isBanner: true },
+    component: () => import('@/views/dashboards/EditConfigurationAlert.vue')
   },
   // Users Pages
   {
@@ -157,25 +138,6 @@ const defaultChildRoutes = (prefix) => [
     name: prefix + '.user-privacy-setting',
     meta: { auth: true, name: 'Privacy Setting', isBanner: true },
     component: () => import('@/views/user/PrivacySetting.vue')
-  },
-  // Widgets Pages
-  {
-    path: '/widget-basic',
-    name: prefix + '.widget-basic',
-    meta: { auth: true, name: 'Widget Basic', isBanner: true },
-    component: () => import('@/views/widgets/WidgetBasic.vue')
-  },
-  {
-    path: '/widget-chart',
-    name: prefix + '.widget-chart',
-    meta: { auth: true, name: 'Widget Chart', isBanner: true },
-    component: () => import('@/views/widgets/WidgetChart.vue')
-  },
-  {
-    path: '/widget-card',
-    name: prefix + '.widget-card',
-    meta: { auth: true, name: 'Widget Card', isBanner: true },
-    component: () => import('@/views/widgets/WidgetCard.vue')
   },
   // Map Pages
   {
