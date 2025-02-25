@@ -18,7 +18,7 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="mb-2 navbar-nav ms-auto align-items-center navbar-list mb-lg-0">
-          <li class="nav-item dropdown">
+          <!-- <li class="nav-item dropdown">
             <a href="#" class="nav-link" id="notification-drop" data-bs-toggle="dropdown">
               <icon-component type="dual-tone" icon-name="bell"></icon-component>
               <span class="bg-danger dots"></span>
@@ -156,7 +156,7 @@
                 </b-card-body>
               </b-card>
             </div>
-          </li>
+          </li> -->
           <li class="nav-item dropdown">
             <a class="nav-link py-0 d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               <img src="@/assets/images/avatars/01.png" alt="User-Profile" class="theme-color-default-img img-fluid avatar avatar-50 avatar-rounded" />
@@ -166,7 +166,7 @@
               <img src="@/assets/images/avatars/avtar_5.png" alt="User-Profile" class="theme-color-yellow-img img-fluid avatar avatar-50 avatar-rounded" />
               <img src="@/assets/images/avatars/avtar_3.png" alt="User-Profile" class="theme-color-pink-img img-fluid avatar avatar-50 avatar-rounded" />
               <div class="caption ms-3 d-none d-md-block">
-                <h6 class="mb-0 caption-title">Ahmad Fauzi</h6>
+                <h6 class="mb-0 caption-title">{{ user.fullname }}</h6>
                 <p class="mb-0 caption-sub-title">Leader NOC</p>
               </div>
             </a>
@@ -174,7 +174,8 @@
               <li><router-link class="dropdown-item" :to="{ name: 'default.user-profile' }">Profile</router-link></li>
               <li><router-link class="dropdown-item" :to="{ name: 'default.user-privacy-setting' }">Privacy Setting</router-link></li>
               <li><hr class="dropdown-divider" /></li>
-              <li><a class="dropdown-item" @click="logout">Logout</a></li>
+              <!-- <li><a class="dropdown-item" @click="logout">Logout</a></li> -->
+              <li><a class="dropdown-item" href="#" @click.prevent="logout">Logout</a></li>
             </ul>
           </li>
         </ul>
@@ -201,7 +202,8 @@ export default {
   },
   data() {
     return {
-      isHidden: false
+      isHidden: false,
+      user: {},
     }
   },
   computed: {
@@ -277,7 +279,8 @@ export default {
     }
   },
   mounted() {
-    window.addEventListener('scroll', this.onscroll)
+    window.addEventListener('scroll', this.onscroll);
+    this.user = JSON.parse(localStorage.getItem('user'));
   },
   // beforeDestroy() {
   //   window.removeEventListener('scroll', this.onscroll)

@@ -54,7 +54,7 @@
                   <img src="@/assets/images/avatars/avtar_5.png" alt="User-Profile" class="theme-color-yellow-img img-fluid avatar avatar-50 avatar-rounded" />
                   <img src="@/assets/images/avatars/avtar_3.png" alt="User-Profile" class="theme-color-pink-img img-fluid avatar avatar-50 avatar-rounded" />
                   <div class="caption ms-3 d-none d-md-block">
-                    <h6 class="mb-0 caption-title">Ahmad Fauzi</h6>
+                    <h6 class="mb-0 caption-title">{{ user.fullname }}</h6>
                     <p class="mb-0 caption-sub-title">Leader NOC</p>
                   </div>
                 </a>
@@ -74,21 +74,26 @@
 </template>
 
 <script>
-import { computed, ref } from 'vue'
-import { useStore } from 'vuex'
+import { mapGetters } from 'vuex'
 
 export default {
-  setup() {
-    const store = useStore()
-    const appName = computed(() => store.getters['setting/app_name'])
-    const show = ref(false)
+  data() {
     return {
-      appName,
-      show
+      show: false,
+      user: {},
     }
+  },
+  computed: {
+    ...mapGetters({
+      appName: 'setting/app_name'
+    })
+  },
+  mounted() {
+    this.user = JSON.parse(localStorage.getItem('user'));
   }
 }
 </script>
+
 
 <style scoped>
 @media (max-width: 576px) {

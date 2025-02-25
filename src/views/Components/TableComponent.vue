@@ -11,6 +11,9 @@
             <li class="nav-item" role="presentation">
               <button class="nav-link text-dark" id="pills-allData-tab" data-bs-toggle="pill" data-bs-target="#pills-allData" type="button" role="tab" aria-controls="pills-allData" aria-selected="false">Data</button>
             </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link text-dark" id="pills-maps-tab" data-bs-toggle="pill" data-bs-target="#pills-maps" type="button" role="tab" aria-controls="pills-maps" aria-selected="false">Maps</button>
+            </li>
           </ul>
         </div>
       </div>
@@ -48,25 +51,39 @@
               </div>
             </section>
           </div>
+        </div>
+        <!-- Maps -->
+        <div class="row tab-pane fade" id="pills-maps" role="tabpanel" aria-labelledby="pills-maps-tab">
+          <div class="col-lg-12">
+            <section class="card">
+              <b-card-body>
+                <lea-flet id="chart-map-column-04" :options="leafFletOptions" />
+              </b-card-body>
+            </section>
+          </div>
         </div> 
       </div>          
     </div>
   </div>
 </template>
   
-  <script>
-  import TableWidget from '@/components/widgets/users/TableData.vue';
+<script>
+  import TableWidget from '@/components/widgets/users/TableData.vue'
   import ChartDashboard from '@/views/Components/ChartDashboard.vue'
-  import api from '@/plugins/axios';
+  import api from '@/plugins/axios'
+  import LeaFlet from '@/components/custom/vector-map/LeaFlet'
+  import { data } from '@/assets/vector-map.js'
   
   export default {
     name: 'TableComponent',
     components: {
       TableWidget,
-      ChartDashboard
+      ChartDashboard,
+      LeaFlet
     },
     data() {
       return {
+        leafFletOptions: {},
         loading: true,
         columns: [],
         filterColumns: true,
@@ -96,6 +113,9 @@
     },
 
     methods: {
+      getLeafFletOptions() {
+        this.leafFletOptions = data
+      },
       async fetchData(page = 1) {
       this.loading = true;
       if (this.typeShowData === 'asset') {
@@ -393,36 +413,40 @@
       this.fetchData();
     }
     },
+
+    mounted() {
+      this.getLeafFletOptions()
+    }
   }
-  </script>  
+</script>  
 
 <style scoped>
-.container-fluid {
-  padding: 1rem;
-}
-.card {
-  border-radius: 12px;
-}
-.skeleton-loader {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 10px;
-}
-.skeleton-row {
-  height: 20px;
-  background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
-  background-size: 200% 100%;
-  animation: skeleton-loading 1.5s infinite;
-  border-radius: 4px;
-}
+  .container-fluid {
+    padding: 1rem;
+  }
+  .card {
+    border-radius: 12px;
+  }
+  .skeleton-loader {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+  }
+  .skeleton-row {
+    height: 20px;
+    background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+    border-radius: 4px;
+  }
 
-@keyframes skeleton-loading {
-  0% {
-    background-position: 200% 0;
+  @keyframes skeleton-loading {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
   }
-  100% {
-    background-position: -200% 0;
-  }
-}
 </style>
